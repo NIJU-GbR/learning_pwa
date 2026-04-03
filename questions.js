@@ -1,7 +1,13 @@
 let questionsByCategory = {};
 let currentCategory = '';
+let currentQuestion = null;
+let currentQuestionIndex = -1;
+let correctCount = 0;
+let wrongCount = 0;
+let remainingQuestionIndexesByCategory = {};
 
 const questionText = document.getElementById('Frage');
+const scoreText = document.getElementById('Score');
 const categoryButtons = Array.from(document.querySelectorAll('[data-category]'));
 const answerButtons = [
     document.getElementById('Antwort1'),
@@ -10,11 +16,20 @@ const answerButtons = [
     document.getElementById('Antwort4')
 ];
 
+function updateScoreDisplay() {
+    if (!scoreText) {
+        return;
+    }
+
+    scoreText.textContent = `Richtig: ${correctCount} | Falsch: ${wrongCount}`;
+}
+
 function renderQuestion(question) {
-    questionText.textContent = question.a;
+    currentQuestion = question;
+    questionText.textContent = question.q;
 
     answerButtons.forEach(function (button, index) {
-        const optionText = question.l && question.l[index];
+        const optionText = question.a && question.a[index];
 
         if (optionText) {
             button.textContent = optionText;
@@ -30,20 +45,79 @@ function getQuestionsForCategory(category) {
     return questionsByCategory[category] || [];
 }
 
-function showRandomQuestion(category) {
+function shuffleIndexes(indexes) {
+    const shuffled = indexes.slice();
+
+    for (let i = shuffled.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = shuffled[i];
+        shuffled[i] = shuffled[j];
+        shuffled[j] = temp;
+    }
+
+    return shuffled;
+}
+
+function hideAnswerButtons() {
+    answerButtons.forEach(function (button) {
+        button.textContent = '';
+        button.hidden = true;
+    });
+}
+
+function showFinalScore() {
+    currentQuestion = null;
+    currentQuestionIndex = -1;
+    questionText.textContent = `Alle Fragen bearbeitet. Finaler Score: Richtig ${correctCount}, Falsch ${wrongCount}.`;
+    hideAnswerButtons();
+}
+
+function areAllQuestionsProcessed() {
+    return Object.keys(questionsByCategory).every(function (category) {
+        const questions = getQuestionsForCategory(category);
+
+        if (!questions.length) {
+            return true;
+        }
+
+        const remainingIndexes = remainingQuestionIndexesByCategory[category] || [];
+        return remainingIndexes.length === 0;
+    });
+}
+
+function showCategoryCompleted() {
+    currentQuestion = null;
+    currentQuestionIndex = -1;
+    questionText.textContent = 'Diese Kategorie ist abgeschlossen. Waehle eine andere Kategorie.';
+    hideAnswerButtons();
+}
+
+function showNextQuestion(category) {
     const questions = getQuestionsForCategory(category);
 
     if (!questions.length) {
+        currentQuestion = null;
+        currentQuestionIndex = -1;
         questionText.textContent = 'Keine Fragen für diese Kategorie gefunden.';
-        answerButtons.forEach(function (button) {
-            button.textContent = '';
-            button.hidden = true;
-        });
+        hideAnswerButtons();
         return;
     }
 
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    renderQuestion(questions[randomIndex]);
+    const remainingIndexes = remainingQuestionIndexesByCategory[category];
+
+    if (!remainingIndexes || !remainingIndexes.length) {
+        if (areAllQuestionsProcessed()) {
+            showFinalScore();
+        } else {
+            showCategoryCompleted();
+        }
+
+        return;
+    }
+
+    const nextQuestionIndex = remainingIndexes[remainingIndexes.length - 1];
+    currentQuestionIndex = nextQuestionIndex;
+    renderQuestion(questions[nextQuestionIndex]);
 }
 
 function setActiveCategory(category) {
@@ -55,7 +129,32 @@ function setActiveCategory(category) {
         button.setAttribute('aria-pressed', String(isActive));
     });
 
-    showRandomQuestion(category);
+    showNextQuestion(category);
+}
+
+function handleAnswerClick(answerIndex) {
+    if (!currentQuestion || !Array.isArray(currentQuestion.c)) {
+        return;
+    }
+
+    const remainingIndexes = remainingQuestionIndexesByCategory[currentCategory];
+
+    if (Array.isArray(remainingIndexes) && currentQuestionIndex >= 0) {
+        remainingQuestionIndexesByCategory[currentCategory] = remainingIndexes.filter(function (index) {
+            return index !== currentQuestionIndex;
+        });
+    }
+
+    const isCorrect = currentQuestion.c.includes(answerIndex);
+
+    if (isCorrect) {
+        correctCount += 1;
+    } else {
+        wrongCount += 1;
+    }
+
+    updateScoreDisplay();
+    showNextQuestion(currentCategory);
 }
 
 async function loadQuestions() {
@@ -69,6 +168,17 @@ async function loadQuestions() {
         }
 
         questionsByCategory = await response.json();
+        remainingQuestionIndexesByCategory = Object.keys(questionsByCategory).reduce(function (accumulator, category) {
+            const questions = getQuestionsForCategory(category);
+            const indexes = questions.map(function (_question, index) {
+                return index;
+            });
+
+            accumulator[category] = shuffleIndexes(indexes);
+            return accumulator;
+        }, {});
+
+        updateScoreDisplay();
 
         if (categoryButtons.length) {
             setActiveCategory(categoryButtons[0].dataset.category);
@@ -83,6 +193,16 @@ async function loadQuestions() {
 categoryButtons.forEach(function (button) {
     button.addEventListener('click', function () {
         setActiveCategory(button.dataset.category);
+    });
+});
+
+answerButtons.forEach(function (button, index) {
+    button.addEventListener('click', function () {
+        if (button.hidden) {
+            return;
+        }
+
+        handleAnswerClick(index);
     });
 });
 
