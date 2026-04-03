@@ -2,6 +2,7 @@ let questionsByCategory = {};
 let currentCategory = '';
 let currentQuestion = null;
 let currentQuestionIndex = -1;
+let currentAnswerOptionIndexes = [];
 let correctCount = 0;
 let wrongCount = 0;
 let remainingQuestionIndexesByCategory = {};
@@ -28,10 +29,23 @@ function renderQuestion(question) {
     currentQuestion = question;
     questionText.textContent = question.q;
 
-    answerButtons.forEach(function (button, index) {
-        const optionText = question.a && question.a[index];
+    const answerOptions = Array.isArray(question.a)
+        ? question.a.map(function (text, originalIndex) {
+            return { text, originalIndex };
+        }).filter(function (option) {
+            return Boolean(option.text);
+        })
+        : [];
 
-        if (optionText) {
+    currentAnswerOptionIndexes = shuffleIndexes(answerOptions.map(function (option) {
+        return option.originalIndex;
+    }));
+
+    answerButtons.forEach(function (button, index) {
+        const originalAnswerIndex = currentAnswerOptionIndexes[index];
+        const optionText = question.a && question.a[originalAnswerIndex];
+
+        if (originalAnswerIndex !== undefined && optionText) {
             button.textContent = optionText;
             button.hidden = false;
         } else {
@@ -59,6 +73,8 @@ function shuffleIndexes(indexes) {
 }
 
 function hideAnswerButtons() {
+    currentAnswerOptionIndexes = [];
+
     answerButtons.forEach(function (button) {
         button.textContent = '';
         button.hidden = true;
@@ -137,6 +153,12 @@ function handleAnswerClick(answerIndex) {
         return;
     }
 
+    const selectedAnswerIndex = currentAnswerOptionIndexes[answerIndex];
+
+    if (selectedAnswerIndex === undefined) {
+        return;
+    }
+
     const remainingIndexes = remainingQuestionIndexesByCategory[currentCategory];
 
     if (Array.isArray(remainingIndexes) && currentQuestionIndex >= 0) {
@@ -145,7 +167,7 @@ function handleAnswerClick(answerIndex) {
         });
     }
 
-    const isCorrect = currentQuestion.c.includes(answerIndex);
+    const isCorrect = currentQuestion.c.includes(selectedAnswerIndex);
 
     if (isCorrect) {
         correctCount += 1;
