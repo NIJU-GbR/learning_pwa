@@ -8,8 +8,12 @@
     {"a":"Welches Transportprotokoll eignet sich für zeitkritische Übertragungen", "l":["UDP","TCP","HTTP","Fast Retransmit"]}
     ],  
   "allgemein": [
-    {"a":"Karl der Große, Geburtsjahr", "l":["747","828","650","1150"]}
-    ],
+    {"a":"Karl der Große, Geburtsjahr", "l":["747","828","650","1150"]},
+    {"a": "Was ist der Hauptunterschied zwischen TCP und UDP?", "l": ["TCP ist verbindungsorientiert, während UDP verbindungslos ist.", "TCP ist schneller als UDP.", "UDP garantiert die Zustellung von Daten, während TCP dies nicht tut.", "TCP verwendet Portnummern, während UDP keine Portnummern verwendet."]},
+    {"a": "Welche der folgenden Aussagen über HTTP ist korrekt?", "l": ["HTTP ist ein zustandsloses Protokoll.", "HTTP verwendet Port 25 für die Kommunikation.", "HTTP garantiert die sichere Übertragung von Daten.", "HTTP ist ein Protokoll auf der Transportschicht."]}, 
+    {"a": "Welche der folgenden Authentifizierungsmethoden bietet HTTP?", "l": ["Digest Access Authentication", "OTP", "OAuth", "2-Faktor-Authentifizierung"]},
+    {"a": "Welches Transportprotokoll eignet sich am besten für zeitkritische Übertragungen?", "l": ["UDP", "TCP", "HTTP", "Fast Retransmit"]}
+    ], 
   "noten": [
     {"a":"C4", "l":["C","D","E","H"]},
     {"a":"(C4 E4 G4)", "l": ["C", "H", "F", "D"]}

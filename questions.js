@@ -1,6 +1,8 @@
-let allQuestions = [];
+let questionsByCategory = {};
+let currentCategory = '';
 
 const questionText = document.getElementById('Frage');
+const categoryButtons = Array.from(document.querySelectorAll('[data-category]'));
 const answerButtons = [
     document.getElementById('Antwort1'),
     document.getElementById('Antwort2'),
@@ -24,14 +26,36 @@ function renderQuestion(question) {
     });
 }
 
-function showRandomQuestion() {
-    if (!allQuestions.length) {
-        questionText.textContent = 'Keine Fragen gefunden.';
+function getQuestionsForCategory(category) {
+    return questionsByCategory[category] || [];
+}
+
+function showRandomQuestion(category) {
+    const questions = getQuestionsForCategory(category);
+
+    if (!questions.length) {
+        questionText.textContent = 'Keine Fragen für diese Kategorie gefunden.';
+        answerButtons.forEach(function (button) {
+            button.textContent = '';
+            button.hidden = true;
+        });
         return;
     }
 
-    const randomIndex = Math.floor(Math.random() * allQuestions.length);
-    renderQuestion(allQuestions[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * questions.length);
+    renderQuestion(questions[randomIndex]);
+}
+
+function setActiveCategory(category) {
+    currentCategory = category;
+
+    categoryButtons.forEach(function (button) {
+        const isActive = button.dataset.category === category;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+    });
+
+    showRandomQuestion(category);
 }
 
 async function loadQuestions() {
@@ -44,12 +68,22 @@ async function loadQuestions() {
             throw new Error(`HTTP-Status ${response.status}`);
         }
 
-        const data = await response.json();
-        allQuestions = Object.values(data).flat();
-        showRandomQuestion();
+        questionsByCategory = await response.json();
+
+        if (categoryButtons.length) {
+            setActiveCategory(categoryButtons[0].dataset.category);
+        } else {
+            questionText.textContent = 'Keine Kategorien gefunden.';
+        }
     } catch (error) {
         questionText.textContent = `Fehler beim Laden der Fragen: ${error.message}`;
     }
 }
+
+categoryButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+        setActiveCategory(button.dataset.category);
+    });
+});
 
 document.addEventListener('DOMContentLoaded', loadQuestions);
