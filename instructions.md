@@ -22,7 +22,7 @@ Verwende ausschließlich folgende Technologien:
 ### Bezug zur Aufgabenstellung
 - Setze nur Funktionen um, die aus `Beleg_DKU.md` hervorgehen.
 - Interpretiere Anforderungen möglichst **minimal und präzise**, ohne unnötige Erweiterungen.
-- Wenn Anforderungen unklar sind, triff die **einfachste sinnvolle Annahme**.
+- Wenn Anforderungen unklar sind, stelle Nachfragen um die Anforderung zu verstehen.
 
 ### Codequalität
 - Schreibe fehlerfreien, funktionsfähigen Code.
