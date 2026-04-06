@@ -16,7 +16,10 @@ let remainingQuestionsPerCategory = {};    // Noch zu beantwortende Fragen pro K
 // ============================================
 
 const questionText = document.getElementById('Frage');
-const scoreText = document.getElementById('Score');
+const correctCountElement = document.getElementById('CorrectCount');
+const wrongCountElement = document.getElementById('WrongCount');
+const correctBarElement = document.getElementById('CorrectBar');
+const wrongBarElement = document.getElementById('WrongBar');
 const categoryButtons = Array.from(document.querySelectorAll('[data-category]'));
 const answerButtons = [
     document.getElementById('Antwort1'),
@@ -27,17 +30,34 @@ const answerButtons = [
 
 
 // ============================================
-// FUNKTION: Punktestand anzeigen
+// FUNKTION: Punktestand anzeigen (mit Balken)
 // ============================================
 
 function updateScoreDisplay() {
-    // Sicherheit: Existiert das Anzeigefeld?
-    if (!scoreText) {
+    // Sicherheit: Existieren die Anzeigeelemente?
+    if (!correctCountElement || !wrongCountElement || !correctBarElement || !wrongBarElement) {
         return;
     }
 
-    // Einfache Ausgabe: "Richtig: X | Falsch: Y"
-    scoreText.textContent = 'Richtig: ' + correctCount + ' | Falsch: ' + wrongCount;
+    // Aktualisiere die Zahlenwerte
+    correctCountElement.textContent = correctCount;
+    wrongCountElement.textContent = wrongCount;
+
+    // Berechne die Gesamtzahl der beantworteten Fragen
+    const totalAnswered = correctCount + wrongCount;
+
+    // Berechne die Breite für jeden Balken (in Prozent)
+    let correctPercentage = 0;
+    let wrongPercentage = 0;
+
+    if (totalAnswered > 0) {
+        correctPercentage = (correctCount / totalAnswered) * 100;
+        wrongPercentage = (wrongCount / totalAnswered) * 100;
+    }
+
+    // Aktualisiere die Balken-Breiten
+    correctBarElement.style.width = correctPercentage + '%';
+    wrongBarElement.style.width = wrongPercentage + '%';
 }
 
 
