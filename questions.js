@@ -10,6 +10,7 @@ let currentAnswerOptionIndexes = [];       // Gemischte Reihenfolge der Antworte
 let correctCount = 0;                      // Wie viele Fragen richtig beantwortet wurden
 let wrongCount = 0;                        // Wie viele Fragen falsch beantwortet wurden
 let remainingQuestionsPerCategory = {};    // Noch zu beantwortende Fragen pro Kategorie
+let answerCheckInProgress = false;         // Verhindert Mehrfachklick waehrend API-Pruefung
 
 // ============================================
 // HTML-ELEMENTE (aus dem DOM laden)
@@ -20,6 +21,8 @@ const correctCountElement = document.getElementById('CorrectCount');
 const wrongCountElement = document.getElementById('WrongCount');
 const correctBarElement = document.getElementById('CorrectBar');
 const wrongBarElement = document.getElementById('WrongBar');
+const loadApiQuestionsButton = document.getElementById('LoadApiQuestionsButton');
+const resetQuizButton = document.getElementById('ResetQuizButton');
 const categoryButtons = Array.from(document.querySelectorAll('[data-category]'));
 const answerButtons = [
     document.getElementById('Antwort1'),
@@ -27,7 +30,6 @@ const answerButtons = [
     document.getElementById('Antwort3'),
     document.getElementById('Antwort4')
 ];
-
 
 // ============================================
 // FUNKTION: Punktestand anzeigen (mit Balken)
@@ -276,14 +278,33 @@ function setActiveCategory(category) {
     showNextQuestion(category);
 }
 
+function removeCurrentQuestionFromRemaining() {
+    const remaining = remainingQuestionsPerCategory[currentCategory];
+
+    if (remaining && currentQuestionIndex >= 0) {
+        const newRemaining = [];
+        let i;
+        for (i = 0; i < remaining.length; i++) {
+            if (remaining[i] !== currentQuestionIndex) {
+                newRemaining.push(remaining[i]);
+            }
+        }
+        remainingQuestionsPerCategory[currentCategory] = newRemaining;
+    }
+}
+
 
 // ============================================
 // FUNKTION: Antwort prüfen (wenn Button geklickt)
 // ============================================
 
-function handleAnswerClick(buttonIndex) {
+async function handleAnswerClick(buttonIndex) {
+    if (answerCheckInProgress) {
+        return;
+    }
+
     // Sicherheit: Existiert eine aktuelle Frage?
-    if (!currentQuestion || !currentQuestion.c) {
+    if (!currentQuestion) {
         return;
     }
 
@@ -295,43 +316,67 @@ function handleAnswerClick(buttonIndex) {
         return;
     }
 
-    // Schritt 1: Entferne diese Frage aus der Liste der verbleibenden Fragen
-    const remaining = remainingQuestionsPerCategory[currentCategory];
-    if (remaining && currentQuestionIndex >= 0) {
-        // Neue Liste: nur Fragen, die nicht diese Frage sind
-        const newRemaining = [];
+    answerCheckInProgress = true;
+
+    let wasEvaluated = false;
+
+    // Schritt 2: Optional lokal bewerten, nur wenn korrekte Antwortdaten vorhanden sind
+    if (currentQuestion.c && currentQuestion.c.length > 0) {
+        let isCorrect = false;
         let i;
-        for (i = 0; i < remaining.length; i++) {
-            if (remaining[i] !== currentQuestionIndex) {
-                newRemaining.push(remaining[i]);
+        for (i = 0; i < currentQuestion.c.length; i++) {
+            if (currentQuestion.c[i] === selectedAnswerIndex) {
+                isCorrect = true;
+                break;
             }
         }
-        remainingQuestionsPerCategory[currentCategory] = newRemaining;
-    }
 
-    // Schritt 2: Prüfe, ob die Antwort richtig ist
-    // currentQuestion.c ist eine Liste mit den korrekten Indizes (z.B. [0])
-    let isCorrect = false;
-    let i;
-    for (i = 0; i < currentQuestion.c.length; i++) {
-        if (currentQuestion.c[i] === selectedAnswerIndex) {
-            isCorrect = true;
-            break;
+        // Schritt 3: Zähler erhöhen
+        if (isCorrect) {
+            correctCount += 1;
+        } else {
+            wrongCount += 1;
         }
-    }
 
-    // Schritt 3: Zähler erhöhen
-    if (isCorrect) {
-        correctCount += 1;
+        // Schritt 4: Punktestand aktualisieren
+        updateScoreDisplay();
+        wasEvaluated = true;
+    } else if (currentQuestion.id !== undefined && currentQuestion.id !== null) {
+        // Schritt 2b: API-basiert bewerten ueber /solve, wenn Frage-ID vorhanden ist
+        try {
+            const solveResponse = await solveApiQuestionByPost(currentQuestion.id, selectedAnswerIndex);
+            const isCorrectFromApi = getIsCorrectFromSolveResponse(solveResponse);
+
+            if (isCorrectFromApi === true) {
+                correctCount += 1;
+                updateScoreDisplay();
+                wasEvaluated = true;
+            } else if (isCorrectFromApi === false) {
+                wrongCount += 1;
+                updateScoreDisplay();
+                wasEvaluated = true;
+            } else {
+                if (solveResponse && solveResponse.feedback) {
+                    questionText.textContent = solveResponse.feedback;
+                } else {
+                    questionText.textContent = 'Antwort konnte nicht ausgewertet werden (unerwartete API-Antwort).';
+                }
+            }
+        } catch (error) {
+            questionText.textContent = 'Fehler beim Pruefen der Antwort: ' + error.message;
+        }
     } else {
-        wrongCount += 1;
+        // Kein Bewertungsweg vorhanden: nur durch die Fragen navigieren.
+        wasEvaluated = true;
     }
 
-    // Schritt 4: Punktestand aktualisieren
-    updateScoreDisplay();
+    // Schritt 5: Nur bei erfolgreichem Durchlauf fortfahren
+    if (wasEvaluated) {
+        removeCurrentQuestionFromRemaining();
+        showNextQuestion(currentCategory);
+    }
 
-    // Schritt 5: Nächste Frage anzeigen
-    showNextQuestion(currentCategory);
+    answerCheckInProgress = false;
 }
 
 
@@ -358,6 +403,291 @@ function createShuffledQuestionList(category) {
     const shuffled = shuffleArray(indexes);
 
     return shuffled;
+}
+
+// ============================================
+// FUNKTION: Erste verfuegbare Kategorie finden
+// ============================================
+
+function getFirstAvailableCategory() {
+    // 1) Bevorzugt: erster Kategorie-Button, der auch Daten hat
+    let i;
+    for (i = 0; i < categoryButtons.length; i++) {
+        const buttonCategory = categoryButtons[i].dataset.category;
+        if (questionsByCategory[buttonCategory] && questionsByCategory[buttonCategory].length > 0) {
+            return buttonCategory;
+        }
+    }
+
+    // 2) Fallback: erste Kategorie aus den API/JSON-Daten
+    let category;
+    for (category in questionsByCategory) {
+        if (questionsByCategory[category] && questionsByCategory[category].length > 0) {
+            return category;
+        }
+    }
+
+    return '';
+}
+
+// ============================================
+// BLUEPRINT: API GET (Fragen laden)
+// ============================================
+
+function getXhr() {
+    // API fuer asynchrone Aufrufe
+    if (window.XMLHttpRequest) {
+        return new XMLHttpRequest();
+    }
+
+    return false;
+}
+
+function sendXhrRequest(method, url, payload) {
+    return new Promise(function (resolve, reject) {
+        const xhr = getXhr();
+        const username = 'test@gmail.com';
+        const password = 'secret';
+        const authHeaderValue = 'Basic ' + btoa(username + ':' + password);
+
+        if (!xhr) {
+            reject(new Error('XHR wird von diesem Browser nicht unterstuetzt.'));
+            return;
+        }
+
+        xhr.onreadystatechange = function () {
+            // Noch nicht fertig
+            if (xhr.readyState !== 4) {
+                return;
+            }
+
+            // Erfolgreiche Antwort
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const text = xhr.responseText || '{}';
+                    const data = JSON.parse(text);
+                    resolve(data);
+                } catch (error) {
+                    reject(new Error('API Antwort ist kein gueltiges JSON.'));
+                }
+                return;
+            }
+
+            // Fehlerhafte Antwort
+            reject(new Error('API Anfrage fehlgeschlagen: HTTP-Status ' + xhr.status));
+        };
+
+        xhr.open(method, url, true);
+        xhr.setRequestHeader('Authorization', authHeaderValue);
+
+        if (method === 'POST') {
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            if (payload === undefined || payload === null) {
+                xhr.send(null);
+            } else {
+                xhr.send(JSON.stringify(payload));
+            }
+            return;
+        }
+
+        xhr.send(null);
+    });
+}
+
+async function getQuestionsByApiGet() {
+    const apiUrl = 'https://vogtserver.de:8888/api/quizzes?pages=0';
+    const data = await sendXhrRequest('GET', apiUrl, null);
+    return data;
+}
+
+// ============================================
+// BLUEPRINT: API POST (Beispiel)
+// ============================================
+
+async function sendQuestionsRequestByApiPost(categoryName) {
+    const apiUrl = '/api/questions';
+
+    const payload = {
+        category: categoryName
+    };
+
+    const data = await sendXhrRequest('POST', apiUrl, payload);
+    return data;
+}
+
+// ============================================
+// BLUEPRINT: API POST (Antwort pruefen)
+// ============================================
+
+async function solveApiQuestionByPost(questionId, selectedAnswerIndex) {
+    const apiUrl = 'https://vogtserver.de:8888/api/quizzes/' + questionId + '/solve';
+
+    // API erwartet ein Raw-Array mit 0-basierter Antwortposition.
+    const payload = [selectedAnswerIndex];
+
+    const data = await sendXhrRequest('POST', apiUrl, payload);
+    return data;
+}
+
+function getIsCorrectFromSolveResponse(responseData) {
+    if (typeof responseData === 'boolean') {
+        return responseData;
+    }
+
+    if (typeof responseData === 'string') {
+        const value = responseData.toLowerCase();
+        if (value === 'true' || value === 'correct' || value === 'richtig') {
+            return true;
+        }
+        if (value === 'false' || value === 'wrong' || value === 'falsch') {
+            return false;
+        }
+    }
+
+    if (responseData && typeof responseData === 'object') {
+        if (typeof responseData.success === 'boolean') {
+            return responseData.success;
+        }
+        if (typeof responseData.correct === 'boolean') {
+            return responseData.correct;
+        }
+        if (typeof responseData.isCorrect === 'boolean') {
+            return responseData.isCorrect;
+        }
+        if (typeof responseData.result === 'boolean') {
+            return responseData.result;
+        }
+    }
+
+    return null;
+}
+
+// ============================================
+// FUNKTION: API-Daten ins Quiz-Format bringen
+// ============================================
+
+function normalizeApiQuestionsData(apiData) {
+    // Fall 1: API liefert Spring-Page-Format mit "content"
+    // Beispiel: { content: [ { title, text, options } ] }
+    if (apiData && Array.isArray(apiData.content)) {
+        const resultByCategory = {};
+
+        let i;
+        for (i = 0; i < apiData.content.length; i++) {
+            const item = apiData.content[i] || {};
+            const categoryName = item.title || 'api';
+
+            if (!resultByCategory[categoryName]) {
+                resultByCategory[categoryName] = [];
+            }
+
+            const question = {
+                id: item.id,
+                q: item.text || '',
+                a: Array.isArray(item.options) ? item.options : [],
+                // Hinweis: Wenn API keine richtige Antwort liefert,
+                // bleibt c leer und es ist nur eine Anzeige-/Navigationsrunde.
+                c: Array.isArray(item.c) ? item.c : []
+            };
+
+            resultByCategory[categoryName].push(question);
+        }
+
+        return resultByCategory;
+    }
+
+    // Fall 2: API liefert schon das gewuenschte Objekt-Format
+    // Beispiel: { "berlin": [ { q, a, c } ] }
+    if (apiData && !Array.isArray(apiData)) {
+        return apiData;
+    }
+
+    // Fall 3: API liefert eine einfache Liste
+    // Beispiel: [ { q, a, c } ] -> wir legen alles in eine Kategorie "api"
+    const result = {};
+    result.api = [];
+
+    if (Array.isArray(apiData)) {
+        let i;
+        for (i = 0; i < apiData.length; i++) {
+            result.api.push(apiData[i]);
+        }
+    }
+
+    return result;
+}
+
+// ============================================
+// FUNKTION: Fragen von API laden und anzeigen
+// ============================================
+
+async function loadQuestionsFromApiAndStartQuiz() {
+    questionText.textContent = 'Lade Fragen von API...';
+
+    try {
+        const apiData = await getQuestionsByApiGet();
+        const normalizedData = normalizeApiQuestionsData(apiData);
+
+        // API-Fragen in bestehende lokale Kategorien integrieren,
+        // damit z.B. Berlin/Hamburg weiter funktionieren.
+        const mergedQuestions = {};
+        let category;
+
+        for (category in questionsByCategory) {
+            mergedQuestions[category] = questionsByCategory[category];
+        }
+
+        for (category in normalizedData) {
+            mergedQuestions[category] = normalizedData[category];
+        }
+
+        questionsByCategory = mergedQuestions;
+
+        let firstApiCategory = '';
+        for (category in normalizedData) {
+            firstApiCategory = category;
+            break;
+        }
+
+        resetQuizProgress(firstApiCategory);
+    } catch (error) {
+        questionText.textContent = 'Fehler beim Laden von API-Fragen: ' + error.message;
+    }
+}
+
+// ============================================
+// FUNKTION: Quiz zurücksetzen und neu starten
+// ============================================
+
+function resetQuizProgress(preferredCategory) {
+    // Zähler zurücksetzen
+    correctCount = 0;
+    wrongCount = 0;
+
+    // Aktuelle Frage zurücksetzen
+    currentQuestion = null;
+    currentQuestionIndex = -1;
+    currentAnswerOptionIndexes = [];
+
+    // Für jede Kategorie neue gemischte Fragenliste anlegen
+    remainingQuestionsPerCategory = {};
+    let category;
+    for (category in questionsByCategory) {
+        const shuffled = createShuffledQuestionList(category);
+        remainingQuestionsPerCategory[category] = shuffled;
+    }
+
+    // Anzeige aktualisieren und Quiz neu starten
+    updateScoreDisplay();
+
+    const firstCategory = preferredCategory || getFirstAvailableCategory();
+
+    if (firstCategory) {
+        setActiveCategory(firstCategory);
+    } else {
+        questionText.textContent = 'Keine Kategorien gefunden.';
+        hideAnswerButtons();
+    }
 }
 
 // ============================================
@@ -390,9 +720,9 @@ async function loadQuestions() {
         // Aktualisiere die Anzeige
         updateScoreDisplay();
 
-        // Schritt 2: Zeige die erste Kategorie
-        if (categoryButtons.length > 0) {
-            const firstCategory = categoryButtons[0].dataset.category;
+        // Schritt 2: Zeige die erste verfuegbare Kategorie
+        const firstCategory = getFirstAvailableCategory();
+        if (firstCategory) {
             setActiveCategory(firstCategory);
         } else {
             questionText.textContent = 'Keine Kategorien gefunden.';
@@ -434,6 +764,26 @@ for (i = 0; i < answerButtons.length; i++) {
         }
         
         handleAnswerClick(buttonIndex);
+    });
+}
+
+// ============================================
+// EVENT-LISTENER: Reset-Button
+// ============================================
+
+if (resetQuizButton) {
+    resetQuizButton.addEventListener('click', function () {
+        resetQuizProgress('');
+    });
+}
+
+// ============================================
+// EVENT-LISTENER: API-Laden-Button
+// ============================================
+
+if (loadApiQuestionsButton) {
+    loadApiQuestionsButton.addEventListener('click', function () {
+        loadQuestionsFromApiAndStartQuiz();
     });
 }
 
