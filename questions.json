@@ -8,5 +8,15 @@
     {"q": "Welches Parlament hat seinen Sitz in Berlin?", "a": ["Deutscher Bundestag", "Europa-Parlament", "Landtag NRW", "Bundesrat Oesterreich"], "c": [0]},
     {"q": "Wie heisst der grosse Park im Zentrum von Berlin?", "a": ["Tiergarten", "Englischer Garten", "Planten un Blomen", "Palmengarten"], "c": [0]},
     {"q": "Welcher Fernsehturm steht in Berlin?", "a": ["Fernsehturm am Alexanderplatz", "Colonius", "Euromast", "Olympiaturm"], "c": [0]}
+  ],
+  "Hamburg": [
+    {"q": "Was ist die zweitgroesste Stadt Deutschlands?", "a": ["Hamburg", "Muenchen", "Koeln", "Berlin"], "c": [0]},
+    {"q": "Welcher Fluss fliesst durch Hamburg?", "a": ["Elbe", "Rhein", "Spree", "Donau"], "c": [0]},
+    {"q": "Wie heisst der bekannte Hafen in Hamburg?", "a": ["Hamburger Hafen", "Bremerhaven", "Kieler Hafen", "Rostocker Hafen"], "c": [0]},
+    {"q": "Welches Verkehrsmittel faehrt in Hamburg oft unter der Erde?", "a": ["U-Bahn", "Faehre", "Flugzeug", "ICE"], "c": [0]},
+    {"q": "In welchem Bundesland liegt Hamburg?", "a": ["Hamburg", "Schleswig-Holstein", "Niedersachsen", "Bremen"], "c": [0]},
+    {"q": "Welches Parlament hat seinen Sitz in Hamburg?", "a": ["Hamburgische Bürgerschaft", "Deutscher Bundestag", "Landtag NRW", "Bundesrat Oesterreich"], "c": [0]},
+    {"q": "Wie heisst der grosse Park im Zentrum von Hamburg?", "a": ["Planten un Blomen", "Englischer Garten", "Tiergarten", "Palmengarten"], "c": [0]},
+    {"q": "Welcher Fernsehturm steht in Hamburg?", "a": ["Heinrich-Hertz-Turm", "Fernsehturm am Alexanderplatz", "Colonius", "Euromast"], "c": [0]}
   ]
 }

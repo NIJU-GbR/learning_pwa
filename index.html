@@ -15,8 +15,6 @@
     <nav>
       <ul>
         <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
       </ul>
     </nav>
 
@@ -26,12 +24,23 @@
         <h1>Kategorien</h1>
         <div class="category-buttons">
           <button type="button" data-category="berlin">Berlin</button>
-          <button type="button" data-category="web">web</button>
-          <button type="button" data-category="allgemein">allgemein</button>
-          <button type="button" data-category="noten">noten</button>
+          <button type="button" data-category="Hamburg">Hamburg</button>
         </div>
         <p id="Frage"></p>
-        <p id="Score" aria-live="polite">Richtig: 0 | Falsch: 0</p>
+        <div id="ScoreContainer" aria-live="polite">
+          <div class="score-bar-group">
+            <label>Richtig: <span id="CorrectCount">0</span></label>
+            <div class="score-bar">
+              <div id="CorrectBar" class="score-bar-fill correct-fill"></div>
+            </div>
+          </div>
+          <div class="score-bar-group">
+            <label>Falsch: <span id="WrongCount">0</span></label>
+            <div class="score-bar">
+              <div id="WrongBar" class="score-bar-fill wrong-fill"></div>
+            </div>
+          </div>
+        </div>
         <button id="Antwort1"></button>
         <button id="Antwort2"></button>
         <button id="Antwort3"></button>

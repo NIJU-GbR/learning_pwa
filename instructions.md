@@ -43,5 +43,38 @@ Verwende ausschließlich folgende Technologien:
 - Halte Funktionen klein und fokussiert.
 - Schreibe nachvollziehbaren, wartbaren Code.
 
+### Code-Stil für JavaScript
+Für maximale Lesbarkeit und Wartbarkeit:
+
+**Schleifen & Array-Operationen**
+- Nutze klassische `for`-Schleifen statt `.map()`, `.filter()`, `.reduce()` oder `.forEach()`
+- Das macht Code sofort verständlich, auch für JavaScript-Anfänger
+
+**Variablenstruktur**
+- Verwende einfache Variablen und primitive Datentypen
+- Vermeiden Sie tiefe Verschachtelungen oder komplexe Objekt-Strukturen
+- Benenne Variablen beschreibend: `remainingQuestionsPerCategory` statt `rQPC`
+
+**Funktionsaufbau**
+- Teile komplexe Vorgänge in mehrere kleine Funktionen auf
+- Eine Funktion = eine klar abgegrenzte Aufgabe
+- Nutze Zwischenschritte: speichere Ergebnisse in Variablen statt alles in einer Zeile zu verketten
+
+**Kommentare & Dokumentation**
+- Jede Funktion bekommt eine klare Überschrift (mit `// ===` Rahmen)
+- Erkläre jeden größeren Schritt im Code
+- Nutze "Sicherheits-Kommentare" für Überprüfungen (z.B. "Sicherheit: Existiert das Element?")
+- Kommentiere die Absicht, nicht das Offensichtliche
+
+**Code-Struktur**
+- Gruppiere zusammenhängende Funktionen mit Überschriften
+- Am Anfang: globale Variablen (mit Erklär-Kommentaren)
+- Dann: alle Funktionen (klein, fokussiert)
+- Am Ende: Event-Listener und Initialisierung
+
+**Konkrete Beispiele vermeiden**
+- Nutze String-Verkettung: `'Text: ' + variable` statt Template-Strings `` `Text: ${variable}` ``
+- Explizite Bedingungen: `if (array.length === 0)` oder `if (!array.length)` aber mit Kommentar
+
 ## Ziel
 Eine einfache, performante und wartbare PWA, die die Anforderungen aus `Beleg_DKU.md` exakt erfüllt — ohne unnötige Features oder Abhängigkeiten.
