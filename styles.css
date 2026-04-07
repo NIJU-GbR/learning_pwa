@@ -273,6 +273,26 @@ select {
   line-height: 1.45;
 }
 
+.bundeslaender-map-panel {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.bundeslaender-map-feedback {
+  margin-bottom: 0.7rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.bundeslaender-map {
+  width: 100%;
+  height: 420px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+}
+
 #ScoreContainer {
   margin-bottom: 1.6rem;
   flex-wrap: wrap;
@@ -384,6 +404,10 @@ select {
 
   .quiz-actions {
     justify-content: stretch;
+  }
+
+  .bundeslaender-map {
+    height: 300px;
   }
 
   #ResetQuizButton {
