@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basic Page</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Learning PWA</h1>
+      <p>Viel Spaß beim Lernen!</p>
+    </header>
+
+    <main>
+      <section>
+        <h2>Fragen</h2>
+        <h1>Kategorien</h1>
+        <div class="category-buttons">
+          <button type="button" data-category="berlin">Berlin</button>
+          <button type="button" data-category="Hamburg">Hamburg</button>
+          <button type="button" data-category="API" id="LoadApiQuestionsButton">Fragen von API laden</button>
+        </div>
+        <p id="Frage"></p>
+        <div id="ScoreContainer" aria-live="polite">
+          <div class="score-bar-group">
+            <label>Richtig: <span id="CorrectCount">0</span></label>
+            <div class="score-bar">
+              <div id="CorrectBar" class="score-bar-fill correct-fill"></div>
+            </div>
+          </div>
+          <div class="score-bar-group">
+            <label>Falsch: <span id="WrongCount">0</span></label>
+            <div class="score-bar">
+              <div id="WrongBar" class="score-bar-fill wrong-fill"></div>
+            </div>
+          </div>
+        </div>
+        <button id="Antwort1"></button>
+        <button id="Antwort2"></button>
+        <button id="Antwort3"></button>
+        <button id="Antwort4"></button>
+        <button id="ResetQuizButton" type="button">Neue Quizrunde starten</button>
+      </section>
+    </main>
+    <script src="questions_lokal.js"></script>
+    <script src="questions_REST.js"></script>
+  </body>
+</html>
