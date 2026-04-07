@@ -122,6 +122,33 @@ select {
   top: 1rem;
 }
 
+.highscore-logout-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  background: #fff5f5;
+  color: #b91c1c;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition), transform var(--transition);
+}
+
+.highscore-logout-button:hover,
+.highscore-logout-button:focus-visible {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
+  outline: none;
+  transform: translateY(-1px);
+}
+
 .highscore-sidebar__rows {
   display: flex;
   flex-direction: column;

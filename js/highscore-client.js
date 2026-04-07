@@ -40,6 +40,10 @@
         document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expiresAt.toUTCString() + '; path=/; SameSite=Lax';
     }
 
+    function deleteCookie(name) {
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax';
+    }
+
     function getActiveCategory() {
         const activeButton = document.querySelector('.category-buttons button.active');
         if (activeButton) {
@@ -239,12 +243,30 @@
 
         pageShell.appendChild(dashboardCard);
 
+        const logoutButton = document.createElement('button');
+        logoutButton.type = 'button';
+        logoutButton.className = 'highscore-logout-button';
+        logoutButton.setAttribute('aria-label', 'Benutzer ausloggen');
+        logoutButton.title = 'Logout';
+        logoutButton.innerHTML = '<span aria-hidden="true">⎋</span>';
+        dashboardCard.appendChild(logoutButton);
+
         const connectionNotice = document.createElement('p');
         connectionNotice.className = 'connection-notice connection-notice--sidebar';
         connectionNotice.setAttribute('data-connection-notice', 'true');
         connectionNotice.setAttribute('aria-live', 'polite');
         connectionNotice.textContent = 'Online: Highscore und API-Quiz sind verfügbar.';
         pageShell.appendChild(connectionNotice);
+
+        logoutButton.addEventListener('click', function () {
+            deleteCookie(usernameCookieName);
+            currentUsername = '';
+            pendingAnswerCategory = '';
+            submittedCategories.clear();
+            resetRoundTracking();
+            refreshDashboard();
+            initUsername();
+        });
     }
 
     function findRowsForCategory(categories, activeCategory) {
