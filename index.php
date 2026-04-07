@@ -27,7 +27,7 @@
         <div class="category-buttons" aria-label="Quiz-Kategorien">
           <button type="button" data-category="Berlin">Berlin</button>
           <button type="button" data-category="Hamburg">Hamburg</button>
-          <button type="button" data-category="Personen" id="LoadApiQuestionsButton">Personen(API)</button>
+          <button type="button" data-category="Personen(API)" id="LoadApiQuestionsButton">Personen(API)</button>
         </div>
 
         <div class="question-panel">
