@@ -17,22 +17,28 @@ if (is_file($questionsJsonPath)) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deutschlandquiz</title>
-    <meta name="theme-color" content="#0f4c81" />
+    <meta name="theme-color" content="#111111" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Deutschlandquiz" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon-192.png" />
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="hero">
       <div class="hero__inner">
-        <p class="eyebrow">Deutschlandquiz</p>
+        <div class="hero__mark" aria-hidden="true">
+          <span class="hero__mark-band hero__mark-band--black"></span>
+          <span class="hero__mark-band hero__mark-band--red"></span>
+          <span class="hero__mark-band hero__mark-band--gold"></span>
+        </div>
+        <p class="eyebrow">Nick Hülsmeyer & Justin Molzen</p>
         <h1>Deutschlandquiz</h1>
-        <p class="hero__text">Ein Quiz rund um deutsche Städte, Bundesländer, Punktestand und optionale Fragen aus der API.</p>
+        <p class="hero__text">Ein Quiz rund um deutsche Städte, Bundesländer und optionale Fragen aus der Vogt API.</p>
       </div>
     </header>
 
@@ -79,7 +85,7 @@ if (is_file($questionsJsonPath)) {
         </div>
 
         <div class="quiz-actions">
-          <button id="ResetQuizButton" type="button">Neue Quizrunde starten</button>
+          <button id="ResetQuizButton" type="button"><iconify-icon icon="mdi:reload" aria-hidden="true"></iconify-icon><span>Neue Quizrunde starten</span></button>
         </div>
       </section>
     </main>

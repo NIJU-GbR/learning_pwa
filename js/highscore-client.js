@@ -248,7 +248,7 @@
         logoutButton.className = 'highscore-logout-button';
         logoutButton.setAttribute('aria-label', 'Benutzer ausloggen');
         logoutButton.title = 'Logout';
-        logoutButton.innerHTML = '<span aria-hidden="true">⎋</span>';
+        logoutButton.innerHTML = '<iconify-icon icon="mdi:logout" aria-hidden="true"></iconify-icon>';
         dashboardCard.appendChild(logoutButton);
 
         const connectionNotice = document.createElement('p');

@@ -41,10 +41,10 @@ let bundeslaenderMap = null;
 let bundeslaenderLayer = null;
 
 const bundeslaenderMapStyle = {
-    color: '#1e3a8a',
+    color: '#b7791f',
     weight: 1,
-    fillColor: '#93c5fd',
-    fillOpacity: 0.7
+    fillColor: '#d4a017',
+    fillOpacity: 0.24
 };
 
 // ============================================
@@ -230,7 +230,7 @@ function evaluateBundeslandSelection(clickedName, layer) {
         if (isCorrect) {
             bundeslaenderMapFeedback.textContent = 'Richtig: ' + clickedName;
         } else {
-            bundeslaenderMapFeedback.textContent = 'Falsch: ' + clickedName + ' (richtig wäre: ' + currentQuestion.targetName + ').';
+            bundeslaenderMapFeedback.textContent = 'Falsch';
         }
     }
 
@@ -281,7 +281,7 @@ async function renderBundeslaenderMapQuestion(question) {
             style: bundeslaenderMapStyle,
             onEachFeature: function (feature, layer) {
                 layer.on('mouseover', function () {
-                    layer.setStyle({ fillOpacity: 0.9 });
+                    layer.setStyle({ fillOpacity: 0.34 });
                 });
 
                 layer.on('mouseout', function () {
@@ -372,7 +372,7 @@ function showCategoryCompleted() {
     currentQuestionIndex = -1;
 
     // Zeige Nachricht
-    questionText.textContent = 'Diese Kategorie ist abgeschlossen. Waehle eine andere Kategorie.';
+    questionText.textContent = 'Diese Kategorie ist abgeschlossen. Wähle eine andere Kategorie.';
 
     // Buttons verstecken
     hideAnswerButtons();
@@ -767,7 +767,7 @@ for (i = 0; i < answerButtons.length; i++) {
 
 if (resetQuizButton) {
     resetQuizButton.addEventListener('click', function () {
-        resetQuizProgress('');
+        resetQuizProgress(currentCategory);
     });
 }
 
