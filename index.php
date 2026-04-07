@@ -64,6 +64,7 @@
     </main>
     <script src="js/highscore-api.js"></script>
     <script src="js/highscore-client.js"></script>
-    <script src="questions.js"></script>
+    <script src="questions_lokal.js"></script>
+    <script src="questions_REST.js"></script>
   </body>
 </html>
