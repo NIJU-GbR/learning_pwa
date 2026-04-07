@@ -12,6 +12,9 @@ let wrongCount = 0;                        // Wie viele Fragen falsch beantworte
 let remainingQuestionsPerCategory = {};    // Noch zu beantwortende Fragen pro Kategorie
 let answerCheckInProgress = false;         // Verhindert Mehrfachklick waehrend API-Pruefung
 
+// Exponiert die laufende Kategorie fuer andere Skripte (z.B. Highscore-Client).
+window.currentCategory = '';
+
 // ============================================
 // HTML-ELEMENTE (aus dem DOM laden)
 // ============================================
@@ -269,6 +272,7 @@ function showNextQuestion(category) {
 function setActiveCategory(category) {
     // Merke die ausgewählte Kategorie
     currentCategory = category;
+    window.currentCategory = category;
 
     // Markiere den aktiven Button
     let i;
@@ -731,10 +735,22 @@ async function loadQuestions() {
         // Aktualisiere die Anzeige
         updateScoreDisplay();
 
-        // Schritt 2: Zeige die erste verfuegbare Kategorie
-        const firstCategory = getFirstAvailableCategory();
-        if (firstCategory) {
-            setActiveCategory(firstCategory);
+        // Beim Laden keine Kategorie automatisch auswaehlen.
+        currentCategory = '';
+        window.currentCategory = '';
+        currentQuestion = null;
+        currentQuestionIndex = -1;
+
+        let i;
+        for (i = 0; i < categoryButtons.length; i++) {
+            categoryButtons[i].classList.remove('active');
+            categoryButtons[i].setAttribute('aria-pressed', 'false');
+        }
+
+        hideAnswerButtons();
+
+        if (getFirstAvailableCategory()) {
+            questionText.textContent = 'Wähle eine Kategorie, um dein Quiz zu starten.';
         } else {
             questionText.textContent = 'Keine Kategorien gefunden.';
         }

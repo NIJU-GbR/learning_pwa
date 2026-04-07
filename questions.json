@@ -1,5 +1,5 @@
 {
-  "berlin": [
+  "Berlin": [
     {"q": "Was ist die Hauptstadt von Deutschland?", "a": ["Berlin", "hamburg", "München", "Köln"], "c": [0]},
     {"q": "Welcher Fluss fließt durch Berlin?", "a": ["Spree", "Rhein", "Elbe", "Donau"], "c": [0]},
     {"q": "Wie heißt das bekannte Tor in Berlin?", "a": ["Brandenburger Tor", "Holstentor", "Isartor", "Karlstor"], "c": [0]},
@@ -9,7 +9,7 @@
     {"q": "Wie heißt der große Park im Zentrum von Berlin?", "a": ["Tiergarten", "Englischer Garten", "Planten un Blomen", "Palmengarten"], "c": [0]},
     {"q": "Welcher Fernsehturm steht in Berlin?", "a": ["Fernsehturm am Alexanderplatz", "Colonius", "Euromast", "Olympiaturm"], "c": [0]}
   ],
-  "hamburg": [
+  "Hamburg": [
     {"q": "Was ist die zweitgrößte Stadt Deutschlands?", "a": ["Hamburg", "München", "Köln", "Berlin"], "c": [0]},
     {"q": "Welcher Fluss fließt durch Hamburg?", "a": ["Elbe", "Rhein", "Spree", "Donau"], "c": [0]},
     {"q": "Wie heißt der bekannte Hafen in Hamburg?", "a": ["Hamburger Hafen", "Bremerhaven", "Kieler Hafen", "Rostocker Hafen"], "c": [0]},

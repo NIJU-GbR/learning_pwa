@@ -1,0 +1,18 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "serve-php-3030",
+			"type": "shell",
+			"command": "php",
+			"args": [
+				"-S",
+				"localhost:3030",
+				"-t",
+				"/Users/justin/Desktop/almatyDEV/learning_pwa"
+			],
+			"isBackground": true,
+			"group": "build"
+		}
+	]
+}

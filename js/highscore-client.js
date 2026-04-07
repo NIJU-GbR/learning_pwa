@@ -78,7 +78,7 @@
             return activeCategory;
         }
 
-        return readLastCategory().trim();
+        return '';
     }
 
     function ensureCategoryScore(category) {
