@@ -22,8 +22,7 @@ window.currentCategory = '';
 const questionText = document.getElementById('Frage');
 const correctCountElement = document.getElementById('CorrectCount');
 const wrongCountElement = document.getElementById('WrongCount');
-const correctBarElement = document.getElementById('CorrectBar');
-const wrongBarElement = document.getElementById('WrongBar');
+const scoreBarElement = document.querySelector('.score-bar');
 const loadApiQuestionsButton = document.getElementById('LoadApiQuestionsButton');
 const resetQuizButton = document.getElementById('ResetQuizButton');
 const categoryButtons = Array.from(document.querySelectorAll('[data-category]'));
@@ -39,6 +38,10 @@ const answerButtons = [
 // ============================================
 
 function updateScoreDisplay() {
+    // Sicherheit: Existieren die Anzeigeelemente?
+    if (!correctCountElement || !wrongCountElement || !scoreBarElement) {
+        return;
+    }
 
     // Aktualisiere die Zahlenwerte
     correctCountElement.textContent = correctCount;
@@ -47,18 +50,28 @@ function updateScoreDisplay() {
     // Berechne die Gesamtzahl der beantworteten Fragen
     const totalAnswered = correctCount + wrongCount;
 
-    // Berechne die Breite für jeden Balken (in Prozent)
+    // Berechne die Breite für jeden Anteil (in Prozent)
     let correctPercentage = 0;
-    let wrongPercentage = 0;
+    let blendStart = 0;
+    let blendEnd = 0;
 
     if (totalAnswered > 0) {
         correctPercentage = (correctCount / totalAnswered) * 100;
-        wrongPercentage = (wrongCount / totalAnswered) * 100;
+        blendStart = Math.max(0, correctPercentage - 4);
+        blendEnd = Math.min(100, correctPercentage + 4);
+
+        // Ein Balken mit weichem Farbübergang zwischen grün und rot.
+        scoreBarElement.style.background = 'linear-gradient(90deg, '
+            + '#15803d 0%, '
+            + '#22c55e ' + Math.max(0, blendStart - 10) + '%, '
+            + '#86efac ' + blendStart + '%, '
+            + '#fca5a5 ' + blendEnd + '%, '
+            + '#ef4444 ' + Math.min(100, blendEnd + 10) + '%, '
+            + '#b91c1c 100%)';
+        return;
     }
 
-    // Aktualisiere die Balken-Breiten
-    correctBarElement.style.width = correctPercentage + '%';
-    wrongBarElement.style.width = wrongPercentage + '%';
+    scoreBarElement.style.background = '';
 }
 
 
@@ -79,7 +92,7 @@ function shuffleArray(array) {
     for (i = result.length - 1; i > 0; i--) {
         // Zufallsposition wählen
         j = Math.floor(Math.random() * (i + 1));
-        
+
         // Elemente tauschen
         const temp = result[i];
         result[i] = result[j];
@@ -113,7 +126,7 @@ function renderQuestion(question) {
     // Schritt 3: Buttons mit den gemischten Antworten füllen
     for (i = 0; i < answerButtons.length; i++) {
         const button = answerButtons[i];
-        
+
         // Welcher Original-Index gehört zu dieser Button-Position?
         const originalIndex = currentAnswerOptionIndexes[i];
         button.textContent = question.a[originalIndex];
@@ -129,7 +142,7 @@ function renderQuestion(question) {
 function hideAnswerButtons() {
     // Alle Buttons zurücksetzen
     currentAnswerOptionIndexes = [];
-    
+
     let i;
     for (i = 0; i < answerButtons.length; i++) {
         answerButtons[i].textContent = '';
@@ -204,7 +217,7 @@ function showNextQuestion(category) {
     // Sicherheit: Existiert die Liste der verbleibenden Fragen?
     if (!remaining || remaining.length === 0) {
         // Alle Fragen dieser Kategorie sind beantwortet!
-        
+
         // Prüfe: Sind die Fragen aller Kategorien beantwortet?
         if (areAllQuestionsCompleted()) {
             showFinalScore();
@@ -216,7 +229,7 @@ function showNextQuestion(category) {
 
     // Hole die nächste Frage (die letzte in der Liste)
     const nextQuestionIndex = remaining[remaining.length - 1];
-    
+
     // Merke diese Fragen-Position
     currentQuestionIndex = nextQuestionIndex;
 
@@ -231,6 +244,14 @@ function showNextQuestion(category) {
 // ============================================
 
 function setActiveCategory(category) {
+    const previousCategory = currentCategory;
+
+    if (previousCategory && previousCategory !== category) {
+        // Beim Kategorienwechsel beginnt der Fortschritt wieder bei 0.
+        correctCount = 0;
+        wrongCount = 0;
+        updateScoreDisplay();
+    }
     // Merke die ausgewählte Kategorie
     currentCategory = category;
     window.currentCategory = category;
@@ -499,7 +520,7 @@ async function loadQuestions() {
 let i;
 for (i = 0; i < categoryButtons.length; i++) {
     const button = categoryButtons[i];
-    
+
     button.addEventListener('click', function () {
         const category = this.dataset.category;
         setActiveCategory(category);
@@ -513,13 +534,13 @@ for (i = 0; i < categoryButtons.length; i++) {
 for (i = 0; i < answerButtons.length; i++) {
     const answerButton = answerButtons[i];
     const buttonIndex = i;
-    
+
     answerButton.addEventListener('click', function () {
         // Sicherheit: Button muss sichtbar sein
         if (this.hidden) {
             return;
         }
-        
+
         handleAnswerClick(buttonIndex);
     });
 }
