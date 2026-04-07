@@ -468,6 +468,43 @@ function resetQuizProgress(preferredCategory) {
 // ============================================
 
 async function loadQuestions() {
+    const inlineQuestions = window.learningPwaQuestions;
+
+    if (inlineQuestions && typeof inlineQuestions === 'object') {
+        questionsByCategory = inlineQuestions;
+
+        // Schritt 1: Für jede Kategorie die Fragen durcheinander mischen
+        let inlineCategory;
+        for (inlineCategory in questionsByCategory) {
+            const inlineShuffled = createShuffledQuestionList(inlineCategory);
+            remainingQuestionsPerCategory[inlineCategory] = inlineShuffled;
+        }
+
+        // Aktualisiere die Anzeige
+        updateScoreDisplay();
+
+        // Beim ersten Laden keine Kategorie automatisch auswaehlen.
+        currentCategory = '';
+        window.currentCategory = '';
+        currentQuestion = null;
+        currentQuestionIndex = -1;
+
+        let inlineButtonIndex;
+        for (inlineButtonIndex = 0; inlineButtonIndex < categoryButtons.length; inlineButtonIndex++) {
+            categoryButtons[inlineButtonIndex].classList.remove('active');
+            categoryButtons[inlineButtonIndex].setAttribute('aria-pressed', 'false');
+        }
+
+        hideAnswerButtons();
+
+        if (getFirstAvailableCategory()) {
+            questionText.textContent = 'Wähle eine Kategorie, um dein Quiz zu starten.';
+        } else {
+            questionText.textContent = 'Keine Kategorien gefunden.';
+        }
+
+        return;
+    }
 
     try {
         // Hole die Fragen-Datei

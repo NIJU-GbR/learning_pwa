@@ -11,6 +11,24 @@ function getXhr() {
     return false;
 }
 
+// ============================================
+// OFFLINE-STATUS PRUEFEN
+// ============================================
+
+function isApiQuizOffline() {
+    return navigator.onLine === false;
+}
+
+function updateApiQuizButtonState() {
+    if (!loadApiQuestionsButton) {
+        return;
+    }
+
+    const offline = isApiQuizOffline();
+    loadApiQuestionsButton.disabled = offline;
+    loadApiQuestionsButton.setAttribute('aria-disabled', offline ? 'true' : 'false');
+}
+
 function sendXhrRequest(method, url, payload) {
     return new Promise(function (resolve, reject) {
         const xhr = getXhr();
@@ -184,6 +202,11 @@ function normalizeApiQuestionsData(apiData) {
 // ============================================
 
 async function loadQuestionsFromApiAndStartQuiz() {
+    if (isApiQuizOffline()) {
+        questionText.textContent = 'Offline: API-Fragen sind nur mit Internetverbindung verfügbar.';
+        return;
+    }
+
     questionText.textContent = 'Lade Fragen von API...';
 
     try {
@@ -226,3 +249,7 @@ if (loadApiQuestionsButton) {
         loadQuestionsFromApiAndStartQuiz();
     });
 }
+
+window.addEventListener('online', updateApiQuizButtonState);
+window.addEventListener('offline', updateApiQuizButtonState);
+document.addEventListener('DOMContentLoaded', updateApiQuizButtonState);

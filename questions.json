@@ -1,22 +1,50 @@
 {
   "Berlin": [
-    {"q": "Was ist die Hauptstadt von Deutschland?", "a": ["Berlin", "hamburg", "München", "Köln"], "c": [0]},
-    {"q": "Welcher Fluss fließt durch Berlin?", "a": ["Spree", "Rhein", "Elbe", "Donau"], "c": [0]},
-    {"q": "Wie heißt das bekannte Tor in Berlin?", "a": ["Brandenburger Tor", "Holstentor", "Isartor", "Karlstor"], "c": [0]},
-    {"q": "Welches Verkehrsmittel fährt in Berlin oft unter der Erde?", "a": ["U-Bahn", "Fähre", "Flugzeug", "ICE"], "c": [0]},
-    {"q": "In welchem Bundesland liegt Berlin?", "a": ["Berlin", "Brandenburg", "Sachsen", "Bayern"], "c": [0]},
-    {"q": "Welches Parlament hat seinen Sitz in Berlin?", "a": ["Deutscher Bundestag", "Europa-Parlament", "Landtag NRW", "Bundesrat Österreich"], "c": [0]},
-    {"q": "Wie heißt der große Park im Zentrum von Berlin?", "a": ["Tiergarten", "Englischer Garten", "Planten un Blomen", "Palmengarten"], "c": [0]},
-    {"q": "Welcher Fernsehturm steht in Berlin?", "a": ["Fernsehturm am Alexanderplatz", "Colonius", "Euromast", "Olympiaturm"], "c": [0]}
+    {"q": "Welcher Berliner Bezirk ist besonders für Street Art und alternative Szene bekannt?", "a": ["Kreuzberg", "Zehlendorf", "Spandau", "Reinickendorf"], "c": [0]},
+    {"q": "Wie heißt der große ehemalige Flughafen, der heute ein öffentlicher Park ist?", "a": ["Tempelhofer Feld", "Tegel Park", "Flughafengarten", "City Air Park"], "c": [0]},
+    {"q": "Welche Berliner Spezialität ist ein gefüllter Donut mit Marmelade?", "a": ["Berliner", "Krapfen", "Pfannkuchen", "Ballen"], "c": [2]},
+    {"q": "Welches Viertel ist bekannt für Luxus-Shopping und den Ku'damm?", "a": ["Charlottenburg", "Neukölln", "Wedding", "Lichtenberg"], "c": [0]},
+    {"q": "Wie heißt das ehemalige Grenzgebiet zwischen Ost- und West-Berlin?", "a": ["Berliner Mauer", "Eiserner Vorhang", "Grenzlinie", "Checkpoint"], "c": [0]},
+    {"q": "Welcher Berliner Club ist weltweit für Techno bekannt?", "a": ["Berghain", "Matrix", "Sisyphos", "Watergate"], "c": [0]},
+    {"q": "Welche Farbe haben die typischen Berliner Doppeldeckerbusse?", "a": ["Gelb", "Rot", "Blau", "Grün"], "c": [0]},
+    {"q": "Welcher Markt ist einer der bekanntesten Wochenmärkte Berlins?", "a": ["Mauerpark Markt", "Fischmarkt", "Viktualienmarkt", "Naschmarkt"], "c": [0]},
+    {"q": "Welches Museum zeigt hauptsächlich DDR-Geschichte?", "a": ["DDR Museum", "Pergamonmuseum", "Jüdisches Museum", "Naturkundemuseum"], "c": [0]},
+    {"q": "Welche Berliner Sehenswürdigkeit hat eine berühmte Glaskuppel?", "a": ["Reichstag", "Dom", "Fernsehturm", "Schloss"], "c": [0]}
   ],
   "Hamburg": [
-    {"q": "Was ist die zweitgrößte Stadt Deutschlands?", "a": ["Hamburg", "München", "Köln", "Berlin"], "c": [0]},
-    {"q": "Welcher Fluss fließt durch Hamburg?", "a": ["Elbe", "Rhein", "Spree", "Donau"], "c": [0]},
-    {"q": "Wie heißt der bekannte Hafen in Hamburg?", "a": ["Hamburger Hafen", "Bremerhaven", "Kieler Hafen", "Rostocker Hafen"], "c": [0]},
-    {"q": "Welches Verkehrsmittel fährt in Hamburg oft unter der Erde?", "a": ["U-Bahn", "Fähre", "Flugzeug", "ICE"], "c": [0]},
-    {"q": "In welchem Bundesland liegt Hamburg?", "a": ["Hamburg", "Schleswig-Holstein", "Niedersachsen", "Bremen"], "c": [0]},
-    {"q": "Welches Parlament hat seinen Sitz in Hamburg?", "a": ["Hamburgische Bürgerschaft", "Deutscher Bundestag", "Landtag NRW", "Bundesrat Österreich"], "c": [0]},
-    {"q": "Wie heißt der große Park im Zentrum von Hamburg?", "a": ["Planten un Blomen", "Englischer Garten", "Tiergarten", "Palmengarten"], "c": [0]},
-    {"q": "Welcher Fernsehturm steht in Hamburg?", "a": ["Heinrich-Hertz-Turm", "Fernsehturm am Alexanderplatz", "Colonius", "Euromast"], "c": [0]}
+    {"q": "Welches Getränk wird in Hamburg oft als 'Alsterwasser' bezeichnet?", "a": ["Bier mit Limo", "Reines Bier", "Apfelsaft", "Cola"], "c": [0]},
+    {"q": "Wie nennt man die kleinen Wasserstraßen in Hamburg?", "a": ["Fleete", "Kanäle", "Gräben", "Rinnen"], "c": [0]},
+    {"q": "Welche Insel gehört zu Hamburg und ist ein beliebtes Ausflugsziel?", "a": ["Neuwerk", "Sylt", "Rügen", "Usedom"], "c": [0]},
+    {"q": "Welches bekannte Musical-Theater liegt direkt am Hafen?", "a": ["Stage Theater im Hafen", "Elbtheater", "Oper Hamburg", "Musical Dome"], "c": [0]},
+    {"q": "Welche Farbe haben die typischen Hafenkräne in Hamburg oft?", "a": ["Blau", "Gelb", "Rot", "Schwarz"], "c": [0]},
+    {"q": "Wie heißt der große Parksee in Hamburg?", "a": ["Außenalster", "Binnenalster", "Elbsee", "Hafensee"], "c": [0]},
+    {"q": "Welcher Hamburger Markt ist einer der größten Wochenmärkte Europas?", "a": ["Isemarkt", "Fischmarkt", "Dommarkt", "Elbmarkt"], "c": [0]},
+    {"q": "Welche berühmte Straße ist bekannt für Nachtleben und Clubs?", "a": ["Reeperbahn", "Mönckebergstraße", "Elbchaussee", "Jungfernstieg"], "c": [0]},
+    {"q": "Welches Tier ist ein Symbol für Hamburgs Hafen?", "a": ["Möwe", "Delfin", "Hai", "Fisch"], "c": [0]},
+    {"q": "Wie heißt das große Volksfest, das mehrmals im Jahr stattfindet?", "a": ["Hamburger Dom", "Oktoberfest", "Wasen", "Kirmes"], "c": [0]}
+  ],
+  "Köln": [
+    {"q": "Wie begrüßen sich viele Menschen in Köln traditionell im Karneval?", "a": ["Alaaf", "Helau", "Servus", "Moin"], "c": [0]},
+    {"q": "Welche Farbe hat das typische Kölsch-Bierglas oft?", "a": ["Transparent", "Grün", "Braun", "Blau"], "c": [0]},
+    {"q": "Welche Tierfigur ist oft ein Symbol für Köln?", "a": ["Geißbock", "Löwe", "Bär", "Adler"], "c": [0]},
+    {"q": "Wie nennt man die Einwohner von Köln umgangssprachlich?", "a": ["Kölner", "Kölnerianer", "Cologner", "Kölis"], "c": [0]},
+    {"q": "Welche Süßigkeit ist typisch für Köln zur Weihnachtszeit?", "a": ["Printen", "Lebkuchen", "Spekulatius", "Dominosteine"], "c": [1]},
+    {"q": "Welche Brücke ist bekannt für Liebesschlösser?", "a": ["Hohenzollernbrücke", "Deutzer Brücke", "Severinsbrücke", "Zoobrücke"], "c": [0]},
+    {"q": "Welcher Kölner Stadtteil ist für Medienunternehmen bekannt?", "a": ["Mülheim", "Ehrenfeld", "Porz", "Chorweiler"], "c": [1]},
+    {"q": "Welcher Sportverein ist der bekannteste in Köln?", "a": ["1. FC Köln", "Bayern München", "Borussia Dortmund", "HSV"], "c": [0]},
+    {"q": "Was ist typisch für die kölsche Sprache?", "a": ["Dialekt", "Akzent", "Fremdsprache", "Slang"], "c": [0]},
+    {"q": "Welches Museum in Köln beschäftigt sich mit Duftstoffen?", "a": ["Parfum Museum", "Duftmuseum", "Aromahaus", "Essenzmuseum"], "c": [1]}
+  ],
+  "Frankfurt": [
+    {"q": "Warum wird Frankfurt oft 'Mainhattan' genannt?", "a": ["Viele Hochhäuser", "Viele Parks", "Viele Brücken", "Viele Kirchen"], "c": [0]},
+    {"q": "Welche Wurst ist typisch für Frankfurt?", "a": ["Frankfurter Würstchen", "Bratwurst", "Currywurst", "Weißwurst"], "c": [0]},
+    {"q": "Welche Straße ist bekannt für Banken und Hochhäuser?", "a": ["Bankenviertel", "Zeil", "Goethestraße", "Fressgass"], "c": [0]},
+    {"q": "Wie heißt die bekannte Einkaufsstraße in Frankfurt?", "a": ["Zeil", "Ku'damm", "Reeperbahn", "Schildergasse"], "c": [0]},
+    {"q": "Welches Getränk ist typisch für Frankfurt?", "a": ["Apfelwein", "Bier", "Wein", "Cola"], "c": [0]},
+    {"q": "Welche Messe ist besonders international bekannt?", "a": ["Buchmesse", "Auto Show", "Tech Expo", "Fashion Week"], "c": [0]},
+    {"q": "Welches Viertel ist für Restaurants und Bars bekannt?", "a": ["Sachsenhausen", "Bockenheim", "Höchst", "Bornheim"], "c": [0]},
+    {"q": "Wie heißt das historische Rathaus in Frankfurt?", "a": ["Römer", "Dom", "Alte Oper", "Paulskirche"], "c": [0]},
+    {"q": "Welcher bekannte Fußballverein kommt aus Frankfurt?", "a": ["Eintracht Frankfurt", "HSV", "Hertha BSC", "VfB Stuttgart"], "c": [0]},
+    {"q": "Welches Gebäude ist ein Wahrzeichen der Frankfurter Skyline?", "a": ["Commerzbank Tower", "Fernsehturm Berlin", "Elbphilharmonie", "Kölner Dom"], "c": [0]}
   ]
 }

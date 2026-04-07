@@ -17,6 +17,7 @@
     let lastCorrectCount = 0;
     let lastWrongCount = 0;
     let dashboardRequestToken = 0;
+    let highscoreUiInitialized = false;
 
     function readCookie(name) {
         const cookiePrefix = name + '=';
@@ -206,6 +207,15 @@
         createOverlay();
     }
 
+    function ensureHighscoreUi() {
+        if (highscoreUiInitialized) {
+            return;
+        }
+
+        injectDashboardPanel();
+        highscoreUiInitialized = true;
+    }
+
     function injectDashboardPanel() {
         const quizCard = document.querySelector('.quiz-card');
         const pageShell = document.querySelector('.page-shell');
@@ -228,6 +238,13 @@
         ].join('');
 
         pageShell.appendChild(dashboardCard);
+
+        const connectionNotice = document.createElement('p');
+        connectionNotice.className = 'connection-notice connection-notice--sidebar';
+        connectionNotice.setAttribute('data-connection-notice', 'true');
+        connectionNotice.setAttribute('aria-live', 'polite');
+        connectionNotice.textContent = 'Online: Highscore und API-Quiz sind verfügbar.';
+        pageShell.appendChild(connectionNotice);
     }
 
     function findRowsForCategory(categories, activeCategory) {
@@ -422,12 +439,16 @@
     }
 
     function init() {
-        if (!window.HighscoreApi || !window.HighscoreApi.isHighscoreAvailable()) {
+        if (!window.HighscoreApi) {
             return;
         }
 
-        initUsername();
-        injectDashboardPanel();
+        ensureHighscoreUi();
+
+        if (window.HighscoreApi.isHighscoreAvailable()) {
+            initUsername();
+        }
+
         refreshDashboard();
         resetRoundTracking();
 
@@ -465,7 +486,15 @@
             questionObserver.observe(questionTextElement, { childList: true, characterData: true, subtree: true });
         }
 
-        window.addEventListener('online', refreshDashboard);
+        window.addEventListener('online', function () {
+            if (!currentUsername) {
+                initUsername();
+            }
+
+            refreshDashboard();
+        });
+
+        window.addEventListener('learning-pwa-connection-change', refreshDashboard);
     }
 
     document.addEventListener('DOMContentLoaded', init);

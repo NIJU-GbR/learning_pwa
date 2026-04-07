@@ -1,10 +1,29 @@
-<?php declare(strict_types=1); ?>
+<?php
+declare(strict_types=1);
+
+$questionsJsonPath = __DIR__ . '/questions.json';
+$inlineQuestionsJson = '{}';
+
+if (is_file($questionsJsonPath)) {
+    $loadedQuestionsJson = file_get_contents($questionsJsonPath);
+    if ($loadedQuestionsJson !== false && $loadedQuestionsJson !== '') {
+        $inlineQuestionsJson = $loadedQuestionsJson;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Learning PWA Quiz</title>
+    <meta name="theme-color" content="#0f4c81" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Learning PWA" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/app-icon-192.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -27,7 +46,9 @@
         <div class="category-buttons" aria-label="Quiz-Kategorien">
           <button type="button" data-category="Berlin">Berlin</button>
           <button type="button" data-category="Hamburg">Hamburg</button>
-          <button type="button" data-category="Personen(API)" id="LoadApiQuestionsButton">Personen(API)</button>
+          <button type="button" data-category="Köln">Köln</button>
+          <button type="button" data-category="Frankfurt">Frankfurt</button>
+          <button type="button" data-category="Personen" id="LoadApiQuestionsButton">Personen(API)</button>
         </div>
 
         <div class="question-panel">
@@ -56,6 +77,10 @@
         </div>
       </section>
     </main>
+    <script>
+      window.learningPwaQuestions = <?php echo $inlineQuestionsJson; ?>;
+    </script>
+    <script src="js/pwa.js"></script>
     <script src="js/highscore-api.js"></script>
     <script src="js/highscore-client.js"></script>
     <script src="questions_lokal.js"></script>
