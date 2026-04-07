@@ -18,13 +18,7 @@ function sendXhrRequest(method, url, payload) {
         const password = 'secret';
         const authHeaderValue = 'Basic ' + btoa(username + ':' + password);
 
-        if (!xhr) {
-            reject(new Error('XHR wird von diesem Browser nicht unterstuetzt.'));
-            return;
-        }
-
         xhr.onreadystatechange = function () {
-            // Noch nicht fertig
             if (xhr.readyState !== 4) {
                 return;
             }

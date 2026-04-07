@@ -60,11 +60,11 @@ function updateScoreDisplay() {
 
 
 // ============================================
-// FUNKTION: Antworten mischen
+// Antworten mischen
 // ============================================
 
 function shuffleArray(array) {
-    // Kopie der original Liste machen (nicht verändern!)
+    // Kopie der original Liste machen
     const result = [];
     let i;
     for (i = 0; i < array.length; i++) {
@@ -87,7 +87,7 @@ function shuffleArray(array) {
 }
 
 // ============================================
-// FUNKTION: Frage anzeigen
+// Frage anzeigen
 // ============================================
 
 function renderQuestion(question) {
@@ -101,37 +101,26 @@ function renderQuestion(question) {
     let answerIndexes = [];
     let i;
     for (i = 0; i < question.a.length; i++) {
-        // Nur Antworten hinzufügen, die nicht leer sind
-        if (question.a[i]) {
-            answerIndexes.push(i);
-        }
+        answerIndexes.push(i);
     }
 
     // Schritt 2: Diese Indizes durcheinander würfeln
     currentAnswerOptionIndexes = shuffleArray(answerIndexes);
 
-    // Schritt 3: Jetzt die Buttons mit den gemischten Antworten füllen
+    // Schritt 3: Buttons mit den gemischten Antworten füllen
     for (i = 0; i < answerButtons.length; i++) {
         const button = answerButtons[i];
         
         // Welcher Original-Index gehört zu dieser Button-Position?
         const originalIndex = currentAnswerOptionIndexes[i];
-
-        // Existiert ein Text für diesen Index?
-        if (originalIndex !== undefined && question.a[originalIndex]) {
-            button.textContent = question.a[originalIndex];
-            button.hidden = false;
-        } else {
-            // Keine Antwort? Button verstecken.
-            button.textContent = '';
-            button.hidden = true;
-        }
+        button.textContent = question.a[originalIndex];
+        button.hidden = false;
     }
 }
 
 
 // ============================================
-// FUNKTION: Antwortbuttons verstecken
+// Antwortbuttons verstecken
 // ============================================
 
 function hideAnswerButtons() {
@@ -169,14 +158,11 @@ function areAllQuestionsCompleted() {
     // Gehe durch alle Kategorien
     let category;
     for (category in questionsByCategory) {
-        // Prüfe: Hat diese Kategorie überhaupt Fragen?
-        if (questionsByCategory[category].length > 0) {
-            // Prüfe: Gibt es noch unbeantwortete Fragen?
-            const remaining = remainingQuestionsPerCategory[category];
-            if (remaining && remaining.length > 0) {
-                // Es gibt noch Fragen! Also nicht fertig.
-                return false;
-            }
+        // Prüfe: Gibt es noch unbeantwortete Fragen?
+        const remaining = remainingQuestionsPerCategory[category];
+        if (remaining && remaining.length > 0) {
+            // Es gibt noch Fragen! Also nicht fertig.
+            return false;
         }
     }
 
@@ -185,7 +171,7 @@ function areAllQuestionsCompleted() {
 }
 
 // ============================================
-// FUNKTION: Kategorie ist fertig (aber nicht alle)
+// Kategorie ist fertig (aber nicht alle)
 // ============================================
 
 function showCategoryCompleted() {
@@ -208,16 +194,6 @@ function showCategoryCompleted() {
 function showNextQuestion(category) {
     // Hole alle Fragen dieser Kategorie
     const allQuestions = questionsByCategory[category];
-
-    // Sicherheit: Existiert die Kategorie?
-    if (!allQuestions || allQuestions.length === 0) {
-        // Keine Fragen gefunden
-        currentQuestion = null;
-        currentQuestionIndex = -1;
-        questionText.textContent = 'Keine Fragen für diese Kategorie gefunden.';
-        hideAnswerButtons();
-        return;
-    }
 
     // Hole die noch zu beantwortenden Fragen
     const remaining = remainingQuestionsPerCategory[category];
@@ -248,7 +224,7 @@ function showNextQuestion(category) {
 
 
 // ============================================
-// FUNKTION: Kategorie wechseln
+// Kategorie wechseln
 // ============================================
 
 function setActiveCategory(category) {
@@ -291,7 +267,7 @@ function removeCurrentQuestionFromRemaining() {
 
 
 // ============================================
-// FUNKTION: Antwort prüfen (wenn Button geklickt)
+// Antwort prüfen (wenn Button geklickt)
 // ============================================
 
 async function handleAnswerClick(buttonIndex) {
@@ -299,7 +275,7 @@ async function handleAnswerClick(buttonIndex) {
         return;
     }
 
-    // Sicherheit: Existiert eine aktuelle Frage?
+    // Existiert eine aktuelle Frage?
     if (!currentQuestion) {
         return;
     }
@@ -467,17 +443,10 @@ function resetQuizProgress(preferredCategory) {
 // ============================================
 
 async function loadQuestions() {
-    // Zeige "Lade..."-Nachricht
-    questionText.textContent = 'Lade Daten...';
 
     try {
         // Hole die Fragen-Datei
         const response = await fetch('questions.json');
-
-        // War die Anfrage erfolgreich?
-        if (!response.ok) {
-            throw new Error('HTTP-Status ' + response.status);
-        }
 
         // Wandle die Datei in Daten um
         questionsByCategory = await response.json();
