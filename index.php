@@ -35,18 +35,12 @@
           <p id="Frage">Wähle eine Kategorie, um dein Quiz zu starten.</p>
         </div>
 
-        <div id="ScoreContainer" aria-live="polite" class="score-grid">
-          <div class="score-bar-group score-card">
-            <label>Richtig <span id="CorrectCount">0</span></label>
-            <div class="score-bar">
-              <div id="CorrectBar" class="score-bar-fill correct-fill"></div>
-            </div>
+        <div id="ScoreContainer" aria-live="polite" class="score-card score-summary">
+          <div class="score-summary__labels">
+            <span class="score-summary__label score-summary__label--correct">Richtig <strong id="CorrectCount">0</strong></span>
+            <span class="score-summary__label score-summary__label--wrong">Falsch <strong id="WrongCount">0</strong></span>
           </div>
-          <div class="score-bar-group score-card">
-            <label>Falsch <span id="WrongCount">0</span></label>
-            <div class="score-bar">
-              <div id="WrongBar" class="score-bar-fill wrong-fill"></div>
-            </div>
+          <div class="score-bar" aria-label="Fortschritt der Antworten">
           </div>
         </div>
 
@@ -64,7 +58,6 @@
     </main>
     <script src="js/highscore-api.js"></script>
     <script src="js/highscore-client.js"></script>
-    <script src="questions_lokal.js"></script>
-    <script src="questions_REST.js"></script>
+    <script src="questions.js"></script>
   </body>
 </html>

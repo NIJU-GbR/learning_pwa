@@ -156,15 +156,19 @@ select {
 
 .category-buttons,
 .answers-grid,
-.quiz-actions,
-#ScoreContainer {
+.quiz-actions {
   display: flex;
   gap: 1rem;
 }
 
-.category-buttons {
+.category-buttons,
+.answers-grid {
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
+}
+
+.quiz-actions {
+  justify-content: flex-end;
 }
 
 .category-buttons button,
@@ -239,48 +243,44 @@ select {
   flex-wrap: wrap;
 }
 
-.score-card {
-  flex: 1 1 260px;
+.score-summary {
   padding: 1rem;
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  border: 1px solid var(--border);
+  margin-bottom: 1.6rem;
 }
 
-.score-bar-group label {
+.score-summary__labels {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.8rem;
 }
 
+.score-summary__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.score-summary__label--correct {
+  color: #15803d;
+}
+
+.score-summary__label--wrong {
+  color: #b91c1c;
+}
+
 .score-bar {
   width: 100%;
-  height: 0.85rem;
+  height: 1rem;
   border-radius: 999px;
-  overflow: hidden;
   background: #e5e7eb;
-}
-
-.score-bar-fill {
-  height: 100%;
-  width: 0%;
-  border-radius: inherit;
-  transition: width 260ms ease;
-}
-
-.correct-fill {
-  background: #22c55e;
-}
-
-.wrong-fill {
-  background: #ef4444;
+  overflow: hidden;
 }
 
 .answers-grid {
-  flex-wrap: wrap;
   margin-bottom: 1.4rem;
 }
 
@@ -303,10 +303,6 @@ select {
 #Antwort3[hidden],
 #Antwort4[hidden] {
   display: none;
-}
-
-.quiz-actions {
-  justify-content: flex-end;
 }
 
 #ResetQuizButton {
