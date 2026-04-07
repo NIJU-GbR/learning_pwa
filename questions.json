@@ -48,21 +48,21 @@
     {"q": "Welches Gebäude ist ein Wahrzeichen der Frankfurter Skyline?", "a": ["Commerzbank Tower", "Fernsehturm Berlin", "Elbphilharmonie", "Kölner Dom"], "c": [0]}
   ],
   "Bundesländer": [
-    {"q": "Klicke auf das Bundesland Bayern.", "type": "map-click", "targetName": "Bayern"},
-    {"q": "Klicke auf das Bundesland Nordrhein-Westfalen.", "type": "map-click", "targetName": "Nordrhein-Westfalen"},
-    {"q": "Klicke auf das Bundesland Sachsen.", "type": "map-click", "targetName": "Sachsen"},
-    {"q": "Klicke auf das Bundesland Niedersachsen.", "type": "map-click", "targetName": "Niedersachsen"},
-    {"q": "Klicke auf das Bundesland Hessen.", "type": "map-click", "targetName": "Hessen"},
-    {"q": "Klicke auf das Bundesland Baden-Württemberg.", "type": "map-click", "targetName": "Baden-Württemberg"},
-    {"q": "Klicke auf das Bundesland Brandenburg.", "type": "map-click", "targetName": "Brandenburg"},
-    {"q": "Klicke auf das Bundesland Thüringen.", "type": "map-click", "targetName": "Thüringen"},
-    {"q": "Klicke auf das Bundesland Sachsen-Anhalt.", "type": "map-click", "targetName": "Sachsen-Anhalt"},
-    {"q": "Klicke auf das Bundesland Rheinland-Pfalz.", "type": "map-click", "targetName": "Rheinland-Pfalz"},
-    {"q": "Klicke auf das Bundesland Saarland.", "type": "map-click", "targetName": "Saarland"},
-    {"q": "Klicke auf das Bundesland Mecklenburg-Vorpommern.", "type": "map-click", "targetName": "Mecklenburg-Vorpommern"},
-    {"q": "Klicke auf das Bundesland Hamburg.", "type": "map-click", "targetName": "Hamburg"},
-    {"q": "Klicke auf das Bundesland Bremen.", "type": "map-click", "targetName": "Bremen"},
-    {"q": "Klicke auf das Bundesland Berlin.", "type": "map-click", "targetName": "Berlin"},
-    {"q": "Klicke auf das Bundesland Schleswig-Holstein.", "type": "map-click", "targetName": "Schleswig-Holstein"}
+    {"q": "Wo liegt das Bundesland Bayern?", "type": "map-click", "targetName": "Bayern"},
+    {"q": "Wo liegt das Bundesland Nordrhein-Westfalen?", "type": "map-click", "targetName": "Nordrhein-Westfalen"},
+    {"q": "Wo liegt das Bundesland Sachsen?", "type": "map-click", "targetName": "Sachsen"},
+    {"q": "Wo liegt das Bundesland Niedersachsen?", "type": "map-click", "targetName": "Niedersachsen"},
+    {"q": "Wo liegt das Bundesland Hessen?", "type": "map-click", "targetName": "Hessen"},
+    {"q": "Wo liegt das Bundesland Baden-Württemberg?", "type": "map-click", "targetName": "Baden-Württemberg"},
+    {"q": "Wo liegt das Bundesland Brandenburg?", "type": "map-click", "targetName": "Brandenburg"},
+    {"q": "Wo liegt das Bundesland Thüringen?", "type": "map-click", "targetName": "Thüringen"},
+    {"q": "Wo liegt das Bundesland Sachsen-Anhalt?", "type": "map-click", "targetName": "Sachsen-Anhalt"},
+    {"q": "Wo liegt das Bundesland Rheinland-Pfalz?", "type": "map-click", "targetName": "Rheinland-Pfalz"},
+    {"q": "Wo liegt das Bundesland Saarland?", "type": "map-click", "targetName": "Saarland"},
+    {"q": "Wo liegt das Bundesland Mecklenburg-Vorpommern?", "type": "map-click", "targetName": "Mecklenburg-Vorpommern"},
+    {"q": "Wo liegt das Bundesland Hamburg?", "type": "map-click", "targetName": "Hamburg"},
+    {"q": "Wo liegt das Bundesland Bremen?", "type": "map-click", "targetName": "Bremen"},
+    {"q": "Wo liegt das Bundesland Berlin?", "type": "map-click", "targetName": "Berlin"},
+    {"q": "Wo liegt das Bundesland Schleswig-Holstein?", "type": "map-click", "targetName": "Schleswig-Holstein"}
   ]
 }
