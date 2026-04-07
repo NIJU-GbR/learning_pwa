@@ -32,6 +32,20 @@ const answerButtons = [
     document.getElementById('Antwort3'),
     document.getElementById('Antwort4')
 ];
+const bundeslaenderMapPanel = document.getElementById('BundeslaenderMapPanel');
+const bundeslaenderMapElement = document.getElementById('BundeslaenderMap');
+const bundeslaenderMapFeedback = document.getElementById('BundeslaenderMapFeedback');
+
+let bundeslaenderGeoJsonData = null;
+let bundeslaenderMap = null;
+let bundeslaenderLayer = null;
+
+const bundeslaenderMapStyle = {
+    color: '#1e3a8a',
+    weight: 1,
+    fillColor: '#93c5fd',
+    fillOpacity: 0.7
+};
 
 // ============================================
 // Punktestand anzeigen (mit Balken)
@@ -110,6 +124,13 @@ function renderQuestion(question) {
     // Speichere die aktuelle Frage
     currentQuestion = question;
 
+    if (isBundeslaenderMapQuestion(question)) {
+        renderBundeslaenderMapQuestion(question);
+        return;
+    }
+
+    hideBundeslaenderMapQuestion();
+
     // Zeige die Frage oben an
     questionText.textContent = question.q;
 
@@ -131,6 +152,160 @@ function renderQuestion(question) {
         const originalIndex = currentAnswerOptionIndexes[i];
         button.textContent = question.a[originalIndex];
         button.hidden = false;
+    }
+}
+
+function isBundeslaenderMapQuestion(question) {
+    return !!(question && question.type === 'map-click');
+}
+
+function normalizeStateName(value) {
+    return String(value || '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+async function ensureBundeslaenderGeoJsonLoaded() {
+    if (bundeslaenderGeoJsonData) {
+        return bundeslaenderGeoJsonData;
+    }
+
+    const response = await fetch('data/bundeslaender.geojson');
+    if (!response.ok) {
+        throw new Error('Bundeslaender-Karte konnte nicht geladen werden.');
+    }
+
+    bundeslaenderGeoJsonData = await response.json();
+    return bundeslaenderGeoJsonData;
+}
+
+function resetBundeslaenderStyles() {
+    if (!bundeslaenderLayer) {
+        return;
+    }
+
+    bundeslaenderLayer.eachLayer(function (layer) {
+        layer.setStyle(bundeslaenderMapStyle);
+    });
+}
+
+function hideBundeslaenderMapQuestion() {
+    if (bundeslaenderMapPanel) {
+        bundeslaenderMapPanel.hidden = true;
+    }
+
+    if (bundeslaenderMapFeedback) {
+        bundeslaenderMapFeedback.textContent = '';
+    }
+}
+
+function evaluateBundeslandSelection(clickedName, layer) {
+    if (answerCheckInProgress || !currentQuestion || !isBundeslaenderMapQuestion(currentQuestion)) {
+        return;
+    }
+
+    answerCheckInProgress = true;
+
+    const clicked = normalizeStateName(clickedName);
+    const expected = normalizeStateName(currentQuestion.targetName);
+    const isCorrect = clicked === expected;
+
+    if (isCorrect) {
+        correctCount += 1;
+    } else {
+        wrongCount += 1;
+    }
+
+    updateScoreDisplay();
+
+    if (layer) {
+        layer.setStyle({
+            fillColor: isCorrect ? '#22c55e' : '#ef4444',
+            fillOpacity: 0.85
+        });
+    }
+
+    if (bundeslaenderMapFeedback) {
+        if (isCorrect) {
+            bundeslaenderMapFeedback.textContent = 'Richtig: ' + clickedName;
+        } else {
+            bundeslaenderMapFeedback.textContent = 'Falsch: ' + clickedName + ' (richtig wäre: ' + currentQuestion.targetName + ').';
+        }
+    }
+
+    window.setTimeout(function () {
+        removeCurrentQuestionFromRemaining();
+        showNextQuestion(currentCategory);
+        answerCheckInProgress = false;
+    }, 550);
+}
+
+async function renderBundeslaenderMapQuestion(question) {
+    hideAnswerButtons();
+
+    questionText.textContent = question.q;
+
+    if (!bundeslaenderMapPanel || !bundeslaenderMapElement) {
+        questionText.textContent = 'Die Kartenansicht ist nicht verfügbar.';
+        return;
+    }
+
+    if (!window.L || typeof window.L.map !== 'function') {
+        questionText.textContent = 'Kartenbibliothek konnte nicht geladen werden.';
+        return;
+    }
+
+    try {
+        const geoJson = await ensureBundeslaenderGeoJsonLoaded();
+
+        bundeslaenderMapPanel.hidden = false;
+        if (bundeslaenderMapFeedback) {
+            bundeslaenderMapFeedback.textContent = 'Klicke auf: ' + (question.targetName || 'ein Bundesland');
+        }
+
+        if (!bundeslaenderMap) {
+            bundeslaenderMap = L.map(bundeslaenderMapElement, {
+                attributionControl: false,
+                zoomControl: true,
+                scrollWheelZoom: false,
+                dragging: true
+            });
+        }
+
+        if (bundeslaenderLayer) {
+            bundeslaenderMap.removeLayer(bundeslaenderLayer);
+        }
+
+        bundeslaenderLayer = L.geoJSON(geoJson, {
+            style: bundeslaenderMapStyle,
+            onEachFeature: function (feature, layer) {
+                layer.on('mouseover', function () {
+                    layer.setStyle({ fillOpacity: 0.9 });
+                });
+
+                layer.on('mouseout', function () {
+                    resetBundeslaenderStyles();
+                });
+
+                layer.on('click', function () {
+                    const props = feature && feature.properties ? feature.properties : {};
+                    const clickedName = props.name || '';
+                    evaluateBundeslandSelection(clickedName, layer);
+                });
+            }
+        }).addTo(bundeslaenderMap);
+
+        bundeslaenderMap.fitBounds(bundeslaenderLayer.getBounds(), {
+            padding: [10, 10]
+        });
+
+        window.setTimeout(function () {
+            bundeslaenderMap.invalidateSize();
+        }, 0);
+    } catch (error) {
+        questionText.textContent = 'Fehler beim Laden der Karte: ' + error.message;
+        hideBundeslaenderMapQuestion();
     }
 }
 
@@ -164,6 +339,7 @@ function showFinalScore() {
 
     // Buttons verstecken
     hideAnswerButtons();
+    hideBundeslaenderMapQuestion();
 }
 
 // ============================================
@@ -200,6 +376,7 @@ function showCategoryCompleted() {
 
     // Buttons verstecken
     hideAnswerButtons();
+    hideBundeslaenderMapQuestion();
 }
 
 
@@ -460,6 +637,7 @@ function resetQuizProgress(preferredCategory) {
     } else {
         questionText.textContent = 'Keine Kategorien gefunden.';
         hideAnswerButtons();
+        hideBundeslaenderMapQuestion();
     }
 }
 
@@ -499,6 +677,7 @@ async function loadQuestions() {
         }
 
         hideAnswerButtons();
+        hideBundeslaenderMapQuestion();
 
         if (getFirstAvailableCategory()) {
             questionText.textContent = 'Wähle eine Kategorie, um dein Quiz zu starten.';

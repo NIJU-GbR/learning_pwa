@@ -18,5 +18,23 @@
     {"q": "Welches Parlament hat seinen Sitz in Hamburg?", "a": ["Hamburgische Bürgerschaft", "Deutscher Bundestag", "Landtag NRW", "Bundesrat Österreich"], "c": [0]},
     {"q": "Wie heißt der große Park im Zentrum von Hamburg?", "a": ["Planten un Blomen", "Englischer Garten", "Tiergarten", "Palmengarten"], "c": [0]},
     {"q": "Welcher Fernsehturm steht in Hamburg?", "a": ["Heinrich-Hertz-Turm", "Fernsehturm am Alexanderplatz", "Colonius", "Euromast"], "c": [0]}
+  ],
+  "Bundesländer": [
+    {"q": "Klicke auf das Bundesland Bayern.", "type": "map-click", "targetName": "Bayern"},
+    {"q": "Klicke auf das Bundesland Nordrhein-Westfalen.", "type": "map-click", "targetName": "Nordrhein-Westfalen"},
+    {"q": "Klicke auf das Bundesland Sachsen.", "type": "map-click", "targetName": "Sachsen"},
+    {"q": "Klicke auf das Bundesland Niedersachsen.", "type": "map-click", "targetName": "Niedersachsen"},
+    {"q": "Klicke auf das Bundesland Hessen.", "type": "map-click", "targetName": "Hessen"},
+    {"q": "Klicke auf das Bundesland Baden-Württemberg.", "type": "map-click", "targetName": "Baden-Württemberg"},
+    {"q": "Klicke auf das Bundesland Brandenburg.", "type": "map-click", "targetName": "Brandenburg"},
+    {"q": "Klicke auf das Bundesland Thüringen.", "type": "map-click", "targetName": "Thüringen"},
+    {"q": "Klicke auf das Bundesland Sachsen-Anhalt.", "type": "map-click", "targetName": "Sachsen-Anhalt"},
+    {"q": "Klicke auf das Bundesland Rheinland-Pfalz.", "type": "map-click", "targetName": "Rheinland-Pfalz"},
+    {"q": "Klicke auf das Bundesland Saarland.", "type": "map-click", "targetName": "Saarland"},
+    {"q": "Klicke auf das Bundesland Mecklenburg-Vorpommern.", "type": "map-click", "targetName": "Mecklenburg-Vorpommern"},
+    {"q": "Klicke auf das Bundesland Hamburg.", "type": "map-click", "targetName": "Hamburg"},
+    {"q": "Klicke auf das Bundesland Bremen.", "type": "map-click", "targetName": "Bremen"},
+    {"q": "Klicke auf das Bundesland Berlin.", "type": "map-click", "targetName": "Berlin"},
+    {"q": "Klicke auf das Bundesland Schleswig-Holstein.", "type": "map-click", "targetName": "Schleswig-Holstein"}
   ]
 }

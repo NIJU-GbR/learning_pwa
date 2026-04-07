@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Learning PWA Quiz</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -27,12 +28,17 @@
         <div class="category-buttons" aria-label="Quiz-Kategorien">
           <button type="button" data-category="Berlin">Berlin</button>
           <button type="button" data-category="Hamburg">Hamburg</button>
-          <button type="button" data-category="Personen(API)" id="LoadApiQuestionsButton">Personen(API)</button>
+          <button type="button" data-category="Bundesländer">Bundesländer</button>
+          <button type="button" data-category="Personen" id="LoadApiQuestionsButton">Personen(API)</button>
         </div>
 
         <div class="question-panel">
           <p class="question-label">Aktuelle Frage</p>
           <p id="Frage">Wähle eine Kategorie, um dein Quiz zu starten.</p>
+          <div id="BundeslaenderMapPanel" class="bundeslaender-map-panel" hidden>
+            <p id="BundeslaenderMapFeedback" class="bundeslaender-map-feedback">Klicke auf ein Bundesland in der Karte.</p>
+            <div id="BundeslaenderMap" class="bundeslaender-map" aria-label="Interaktive Deutschlandkarte"></div>
+          </div>
         </div>
 
         <div id="ScoreContainer" aria-live="polite" class="score-card score-summary">
@@ -56,6 +62,7 @@
         </div>
       </section>
     </main>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="js/highscore-api.js"></script>
     <script src="js/highscore-client.js"></script>
     <script src="questions_lokal.js"></script>
