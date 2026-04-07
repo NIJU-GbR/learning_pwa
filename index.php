@@ -16,11 +16,11 @@ if (is_file($questionsJsonPath)) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Learning PWA Quiz</title>
+    <title>Deutschlandquiz</title>
     <meta name="theme-color" content="#0f4c81" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Learning PWA" />
+    <meta name="apple-mobile-web-app-title" content="Deutschlandquiz" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon-192.png" />
@@ -30,9 +30,9 @@ if (is_file($questionsJsonPath)) {
   <body>
     <header class="hero">
       <div class="hero__inner">
-        <p class="eyebrow">Quiz</p>
-        <h1>Learning PWA</h1>
-        <p class="hero__text">Ein einfaches Quiz mit Kategorien, Punktestand und optionalen Fragen aus der API.</p>
+        <p class="eyebrow">Deutschlandquiz</p>
+        <h1>Deutschlandquiz</h1>
+        <p class="hero__text">Ein Quiz rund um deutsche Städte, Bundesländer, Punktestand und optionale Fragen aus der API.</p>
       </div>
     </header>
 
@@ -40,7 +40,7 @@ if (is_file($questionsJsonPath)) {
       <section class="quiz-card">
         <div class="section-heading">
           <p class="section-heading__kicker">Fragen</p>
-          <h2>Wähle eine Kategorie</h2>
+          <h2>Wähle ein Thema</h2>
           <p class="section-heading__text">Wähle ein Thema und beantworte die Fragen nacheinander.</p>
         </div>
 

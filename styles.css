@@ -243,6 +243,17 @@ select {
   color: var(--text-primary);
 }
 
+.category-buttons button[data-category="Bundesländer"] {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0%, rgba(221, 0, 0, 0.12) 50%, rgba(255, 206, 0, 0.12) 100%);
+  border-color: rgba(0, 0, 0, 0.16);
+}
+
+.category-buttons button[data-category="Bundesländer"]:hover,
+.category-buttons button[data-category="Bundesländer"]:focus-visible {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.16) 0%, rgba(221, 0, 0, 0.16) 50%, rgba(255, 206, 0, 0.16) 100%);
+  border-color: rgba(0, 0, 0, 0.24);
+}
+
 .category-buttons button:hover,
 .category-buttons button:focus-visible,
 #LoadApiQuestionsButton:hover,
@@ -260,6 +271,12 @@ select {
   background: var(--accent);
   color: #ffffff;
   border-color: var(--accent);
+}
+
+.category-buttons button[data-category="Bundesländer"].active {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.22) 0%, rgba(221, 0, 0, 0.22) 50%, rgba(255, 206, 0, 0.22) 100%);
+  border-color: rgba(0, 0, 0, 0.38);
+  color: #111827;
 }
 
 #LoadApiQuestionsButton {

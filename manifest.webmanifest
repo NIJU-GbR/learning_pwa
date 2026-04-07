@@ -1,7 +1,7 @@
 {
-  "name": "Learning PWA Quiz",
-  "short_name": "Learning PWA",
-  "description": "Quiz-App mit lokalen Kategorien, optionalen API-Fragen und Offline-Unterstützung.",
+  "name": "Deutschlandquiz",
+  "short_name": "Deutschlandquiz",
+  "description": "Deutschlandquiz mit lokalen Kategorien, optionalen API-Fragen und Offline-Unterstützung.",
   "id": "./",
   "start_url": "./",
   "scope": "./",

@@ -1,4 +1,4 @@
-# learning_pwa
+# Deutschlandquiz
 Internetprogrammierung Web App - made in Almaty. Made without AI
 
 # Ablauf 
