@@ -1,5 +1,6 @@
 'use strict';
 
+// Dateien, die die App auch offline noch starten lassen.
 const CACHE_NAME = 'learning-pwa-v2';
 const APP_SHELL_FILES = [
     './',
@@ -21,6 +22,7 @@ const APP_SHELL_FILES = [
     './images/deutschland.png'
 ];
 
+// Holt die App-Hülle aus dem Cache, damit Navigation offline funktioniert.
 function findOfflineAppShell() {
     return caches.match('./', { ignoreSearch: true }).then(function (cachedRootResponse) {
         if (cachedRootResponse) {
@@ -31,6 +33,7 @@ function findOfflineAppShell() {
     });
 }
 
+// Navigationen bevorzugen den Cache, aktualisieren ihn aber im Hintergrund.
 function handleNavigationRequest(event) {
     return findOfflineAppShell().then(function (cachedShellResponse) {
         if (cachedShellResponse) {
@@ -58,6 +61,7 @@ function handleNavigationRequest(event) {
     });
 }
 
+// Statische Dateien zuerst aus dem Cache, sonst vom Netzwerk laden.
 function handleStaticRequest(event, isSameOrigin) {
     return caches.match(event.request, { ignoreSearch: true }).then(function (cachedResponse) {
         if (cachedResponse) {
@@ -81,6 +85,7 @@ function handleStaticRequest(event, isSameOrigin) {
     });
 }
 
+// Beim Installieren alles Nötige vorab cachen.
 self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open(CACHE_NAME).then(function (cache) {
@@ -91,6 +96,7 @@ self.addEventListener('install', function (event) {
     );
 });
 
+// Alte Caches entfernen, wenn eine neue Version aktiv wird.
 self.addEventListener('activate', function (event) {
     event.waitUntil(
         caches.keys().then(function (cacheNames) {
@@ -111,6 +117,7 @@ self.addEventListener('activate', function (event) {
     );
 });
 
+// Netzwerkregeln für Seitenaufrufe, lokale Dateien und externe APIs.
 self.addEventListener('fetch', function (event) {
     if (event.request.method !== 'GET') {
         return;

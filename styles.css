@@ -1,3 +1,4 @@
+/* Globale Farben und wiederverwendbare Layoutwerte. */
 :root {
   --bg: #f4efe3;
   --bg-alt: #f8f4ec;
@@ -14,13 +15,15 @@
   --radius-lg: 18px;
   --radius-md: 12px;
   --transition: 160ms ease;
-}
+/* Einfacher Reset für alle Elemente. */
+*
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+/* Grundlayout der Seite. */
 
 body {
   min-height: 100vh;

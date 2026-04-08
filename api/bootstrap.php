@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+// Datenbankzugriff und Schema-Aufbau für die Highscore-Speicherung.
 function getHighscoreDatabase(): PDO
 {
     static $pdo = null;
@@ -23,6 +24,7 @@ function getHighscoreDatabase(): PDO
     return $pdo;
 }
 
+// Stellt sicher, dass die Tabelle und die erwarteten Spalten vorhanden sind.
 function ensureHighscoreSchema(PDO $db): void
 {
     $db->exec(
@@ -55,6 +57,7 @@ function ensureHighscoreSchema(PDO $db): void
     $db->exec('CREATE INDEX IF NOT EXISTS idx_highscores_category ON highscores(category)');
 }
 
+// Alte Tabellenformate werden auf das aktuelle Highscore-Schema migriert.
 function migrateLegacyHighscoreSchema(PDO $db, array $existingColumns): void
 {
     $db->beginTransaction();
@@ -115,6 +118,7 @@ function migrateLegacyHighscoreSchema(PDO $db, array $existingColumns): void
     }
 }
 
+// Einheitliche JSON-Antworten für die REST-API.
 function sendJsonResponse(array $payload, int $statusCode = 200): void
 {
     http_response_code($statusCode);
@@ -123,6 +127,7 @@ function sendJsonResponse(array $payload, int $statusCode = 200): void
     exit;
 }
 
+// Liest den JSON-Body von POST-Anfragen aus.
 function readJsonBody(): array
 {
     $rawBody = file_get_contents('php://input');
@@ -138,6 +143,7 @@ function readJsonBody(): array
     return $decoded;
 }
 
+// Liefert das Dashboard pro Kategorie, optional gefiltert.
 function fetchDashboardRows(PDO $db, string $categoryFilter = ''): array
 {
     $categories = [];

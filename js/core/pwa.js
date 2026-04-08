@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+    // Hält die App online/offline sauber im Blick und registriert den Service Worker.
     const serviceWorkerPath = 'sw.js';
     const offlineClassName = 'app-is-offline';
     const apiButton = document.getElementById('LoadApiQuestionsButton');

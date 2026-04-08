@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+// Lokale Fragen serverseitig laden, damit sie direkt im Browser verfügbar sind.
 $questionsJsonPath = __DIR__ . '/data/questions.json';
 $inlineQuestionsJson = '{}';
 
@@ -14,6 +15,7 @@ if (is_file($questionsJsonPath)) {
 <!DOCTYPE html>
 <html lang="de">
   <head>
+    <!-- Basis-Metadaten und PWA-Einbindung. -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deutschlandquiz</title>
@@ -29,6 +31,7 @@ if (is_file($questionsJsonPath)) {
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <!-- Kopfbereich mit Titel und kurzer Beschreibung. -->
     <header class="hero">
       <div class="hero__inner">
         <div class="hero__mark" aria-hidden="true">
@@ -42,6 +45,7 @@ if (is_file($questionsJsonPath)) {
       </div>
     </header>
 
+    <!-- Hauptbereich des Quiz mit Kategorien, Frage und Antworten. -->
     <main class="page-shell">
       <section class="quiz-card">
         <div class="section-heading">
@@ -89,9 +93,11 @@ if (is_file($questionsJsonPath)) {
         </div>
       </section>
     </main>
+    <!-- Fragen werden inline an JavaScript übergeben. -->
     <script>
       window.learningPwaQuestions = <?php echo $inlineQuestionsJson; ?>;
     </script>
+    <!-- App-Logik, Karte und Highscore-Funktionen laden. -->
     <script src="js/core/pwa.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="js/api/highscore-api.js"></script>

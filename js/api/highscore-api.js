@@ -3,6 +3,7 @@
 (function () {
     const apiUrl = 'api/highscores.php';
 
+    // Kleine Fetch-Hilfsfunktion für die Highscore-REST-API.
     async function requestJson(url, options) {
         const response = await fetch(url, options);
 
@@ -13,6 +14,7 @@
         return response.json();
     }
 
+    // Öffentliche API für Lesen, Speichern und Verfügbarkeit prüfen.
     window.HighscoreApi = {
         isHighscoreAvailable: function () {
             return window.location.protocol !== 'file:' && navigator.onLine;

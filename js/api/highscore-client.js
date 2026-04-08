@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+    // Verknüpft Benutzername, Fortschritt und das Highscore-Dashboard.
     const questionTextElement = document.getElementById('Frage');
     const correctCountElement = document.getElementById('CorrectCount');
     const wrongCountElement = document.getElementById('WrongCount');

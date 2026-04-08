@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/bootstrap.php';
 
+// Vergleicht zwei Scores und entscheidet, ob ein neuer Eintrag besser ist.
 function isNewScoreBetter(array $existingRow, int $correctCount, float $accuracy, int $wrongCount): bool
 {
     $existingCorrect = (int) ($existingRow['correct_count'] ?? 0);
@@ -23,6 +24,7 @@ function isNewScoreBetter(array $existingRow, int $correctCount, float $accuracy
 $db = getHighscoreDatabase();
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+// GET liefert das Dashboard, POST speichert einen Score.
 if ($method === 'GET') {
     $categoryFilter = trim((string) ($_GET['category'] ?? ''));
 
@@ -35,6 +37,7 @@ if ($method !== 'POST') {
     sendJsonResponse(['error' => 'Methode nicht erlaubt.'], 405);
 }
 
+// Eingaben prüfen, bevor die Datenbank beschrieben wird.
 $payload = readJsonBody();
 
 $username = trim((string) ($payload['username'] ?? ''));
@@ -57,6 +60,7 @@ if ($totalCount !== ($correctCount + $wrongCount)) {
 
 $accuracy = $totalCount > 0 ? ($correctCount / $totalCount) * 100 : 0.0;
 
+// Vorhandenen Datensatz für denselben Nutzer und dieselbe Kategorie suchen.
 $existingStatement = $db->prepare(
     'SELECT id, username, category, correct_count, wrong_count, total_count, accuracy
      FROM highscores
@@ -74,6 +78,7 @@ $existingStatement->execute([
 $existingRecord = $existingStatement->fetch();
 
 if ($existingRecord !== false) {
+    // Nur verbessern, wenn der neue Score besser ist als der alte.
     if (!isNewScoreBetter($existingRecord, $correctCount, $accuracy, $wrongCount)) {
         sendJsonResponse([
             'success' => true,
@@ -125,6 +130,7 @@ if ($existingRecord !== false) {
     ]);
 }
 
+// Kein Eintrag vorhanden: neuen Highscore anlegen.
 $insertStatement = $db->prepare(
     'INSERT INTO highscores (username, category, correct_count, wrong_count, total_count, accuracy)
      VALUES (:username, :category, :correct_count, :wrong_count, :total_count, :accuracy)'
