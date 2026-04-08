@@ -518,7 +518,7 @@ async function loadQuestions() {
 
     try {
         // Hole die Fragen-Datei
-        const response = await fetch('questions.json');
+        const response = await fetch('data/questions.json');
 
         // Wandle die Datei in Daten um
         questionsByCategory = await response.json();

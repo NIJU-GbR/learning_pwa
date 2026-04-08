@@ -6,7 +6,7 @@ const APP_SHELL_FILES = [
     './index.php',
     './styles.css',
     './manifest.webmanifest',
-    './questions.json',
+    './data/questions.json',
     './js/quiz/questions_lokal.js',
     './js/quiz/questions_lokal_map.js',
     './js/quiz/questions_REST.js',

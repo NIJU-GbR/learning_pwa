@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$questionsJsonPath = __DIR__ . '/questions.json';
+$questionsJsonPath = __DIR__ . '/data/questions.json';
 $inlineQuestionsJson = '{}';
 
 if (is_file($questionsJsonPath)) {
