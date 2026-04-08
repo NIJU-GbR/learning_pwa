@@ -8,6 +8,7 @@ const APP_SHELL_FILES = [
     './manifest.webmanifest',
     './questions.json',
     './questions_lokal.js',
+    './js/questions_lokal_map.js',
     './questions_REST.js',
     './js/pwa.js',
     './js/highscore-api.js',

@@ -97,6 +97,7 @@ if (is_file($questionsJsonPath)) {
     <script src="js/highscore-api.js"></script>
     <script src="js/highscore-client.js"></script>
     <script src="questions_lokal.js"></script>
+    <script src="js/questions_lokal_map.js"></script>
     <script src="questions_REST.js"></script>
   </body>
 </html>
