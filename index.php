@@ -92,12 +92,12 @@ if (is_file($questionsJsonPath)) {
     <script>
       window.learningPwaQuestions = <?php echo $inlineQuestionsJson; ?>;
     </script>
-    <script src="js/pwa.js"></script>
+    <script src="js/core/pwa.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="js/highscore-api.js"></script>
-    <script src="js/highscore-client.js"></script>
-    <script src="questions_lokal.js"></script>
-    <script src="js/questions_lokal_map.js"></script>
-    <script src="questions_REST.js"></script>
+    <script src="js/api/highscore-api.js"></script>
+    <script src="js/api/highscore-client.js"></script>
+    <script src="js/quiz/questions_lokal.js"></script>
+    <script src="js/quiz/questions_lokal_map.js"></script>
+    <script src="js/quiz/questions_REST.js"></script>
   </body>
 </html>
