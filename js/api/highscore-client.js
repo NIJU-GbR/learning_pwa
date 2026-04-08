@@ -147,10 +147,11 @@
         input.maxLength = 30;
         input.placeholder = 'Dein Name';
         input.className = 'username-input';
-        input.style.width = '100%';
         input.style.padding = '0.8rem';
-        input.style.borderRadius = '12px';
-        input.style.marginBottom = '0.75rem';
+
+        const inputFrame = document.createElement('div');
+        inputFrame.className = 'username-input-frame';
+        inputFrame.appendChild(input);
 
         const error = document.createElement('p');
         error.style.color = '#dc2626';
@@ -167,7 +168,7 @@
 
         panel.appendChild(title);
         panel.appendChild(text);
-        panel.appendChild(input);
+        panel.appendChild(inputFrame);
         panel.appendChild(error);
         panel.appendChild(button);
         overlay.appendChild(panel);
