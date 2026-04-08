@@ -23,6 +23,94 @@ function isNewScoreBetter(array $existingRow, int $correctCount, float $accuracy
 
 $db = getHighscoreDatabase();
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$action = trim((string) ($_GET['action'] ?? ''));
+
+if ($action === 'user-status' && $method === 'GET') {
+    $username = trim((string) ($_GET['username'] ?? ''));
+
+    if ($username === '') {
+        sendJsonResponse(['error' => 'Benutzername ist erforderlich.'], 422);
+    }
+
+    $user = findUserByUsername($db, $username);
+
+    sendJsonResponse([
+        'exists' => $user !== false,
+        'username' => $user !== false ? (string) $user['username'] : $username
+    ]);
+}
+
+if ($action === 'register' && $method === 'POST') {
+    $payload = readJsonBody();
+    $username = trim((string) ($payload['username'] ?? ''));
+    $pin = trim((string) ($payload['pin'] ?? ''));
+
+    if ($username === '') {
+        sendJsonResponse(['error' => 'Benutzername ist erforderlich.'], 422);
+    }
+
+    if (!validatePin($pin)) {
+        sendJsonResponse(['error' => 'PIN muss genau 4 Ziffern haben.'], 422);
+    }
+
+    $existingUser = findUserByUsername($db, $username);
+    if ($existingUser !== false) {
+        sendJsonResponse(['error' => 'Benutzername ist bereits vergeben.'], 409);
+    }
+
+    $statement = $db->prepare(
+        'INSERT INTO users (username, pin_hash)
+         VALUES (:username, :pin_hash)'
+    );
+
+    $statement->execute([
+        ':username' => $username,
+        ':pin_hash' => password_hash($pin, PASSWORD_DEFAULT)
+    ]);
+
+    $_SESSION['authenticated_username'] = $username;
+
+    sendJsonResponse([
+        'success' => true,
+        'username' => $username,
+        'registered' => true
+    ], 201);
+}
+
+if ($action === 'login' && $method === 'POST') {
+    $payload = readJsonBody();
+    $username = trim((string) ($payload['username'] ?? ''));
+    $pin = trim((string) ($payload['pin'] ?? ''));
+
+    if ($username === '') {
+        sendJsonResponse(['error' => 'Benutzername ist erforderlich.'], 422);
+    }
+
+    if (!validatePin($pin)) {
+        sendJsonResponse(['error' => 'PIN muss genau 4 Ziffern haben.'], 422);
+    }
+
+    $user = findUserByUsername($db, $username);
+    if ($user === false || !password_verify($pin, (string) $user['pin_hash'])) {
+        sendJsonResponse(['error' => 'Benutzername oder PIN ist falsch.'], 401);
+    }
+
+    $_SESSION['authenticated_username'] = (string) $user['username'];
+
+    sendJsonResponse([
+        'success' => true,
+        'username' => (string) $user['username'],
+        'registered' => false
+    ]);
+}
+
+if ($action === 'logout' && $method === 'POST') {
+    unset($_SESSION['authenticated_username']);
+
+    sendJsonResponse([
+        'success' => true
+    ]);
+}
 
 // GET liefert das Dashboard, POST speichert einen Score.
 if ($method === 'GET') {
@@ -49,6 +137,8 @@ $totalCount = (int) ($payload['totalCount'] ?? -1);
 if ($username === '' || $category === '') {
     sendJsonResponse(['error' => 'Benutzername und Kategorie sind erforderlich.'], 422);
 }
+
+requireAuthenticatedUsername($username);
 
 if ($correctCount < 0 || $wrongCount < 0 || $totalCount < 0) {
     sendJsonResponse(['error' => 'Ungültige Score-Werte.'], 422);

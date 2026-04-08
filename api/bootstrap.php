@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
 // Datenbankzugriff und Schema-Aufbau für die Highscore-Speicherung.
 function getHighscoreDatabase(): PDO
 {
@@ -55,6 +59,21 @@ function ensureHighscoreSchema(PDO $db): void
     }
 
     $db->exec('CREATE INDEX IF NOT EXISTS idx_highscores_category ON highscores(category)');
+    ensureUserSchema($db);
+}
+
+function ensureUserSchema(PDO $db): void
+{
+    $db->exec(
+        'CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            pin_hash TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )'
+    );
+
+    $db->exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username_nocase ON users(lower(username))');
 }
 
 // Alte Tabellenformate werden auf das aktuelle Highscore-Schema migriert.
@@ -188,4 +207,34 @@ function fetchDashboardRows(PDO $db, string $categoryFilter = ''): array
     }
 
     return $categories;
+}
+
+function findUserByUsername(PDO $db, string $username): array|false
+{
+    $statement = $db->prepare(
+        'SELECT id, username, pin_hash, created_at
+         FROM users
+         WHERE lower(username) = lower(:username)
+         LIMIT 1'
+    );
+
+    $statement->execute([
+        ':username' => $username
+    ]);
+
+    return $statement->fetch();
+}
+
+function validatePin(string $pin): bool
+{
+    return preg_match('/^\d{4}$/', $pin) === 1;
+}
+
+function requireAuthenticatedUsername(string $username): void
+{
+    $sessionUsername = trim((string) ($_SESSION['authenticated_username'] ?? ''));
+
+    if ($sessionUsername === '' || strcasecmp($sessionUsername, $username) !== 0) {
+        sendJsonResponse(['error' => 'Nicht autorisiert. Bitte erneut mit PIN anmelden.'], 401);
+    }
 }

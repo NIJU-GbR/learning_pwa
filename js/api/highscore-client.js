@@ -14,6 +14,7 @@
     const scoreByCategory = {};
     const submittedCategories = new Set();
     let currentUsername = '';
+    let isAuthenticated = false;
     let pendingAnswerCategory = '';
     let lastCorrectCount = 0;
     let lastWrongCount = 0;
@@ -116,6 +117,11 @@
     }
 
     function createOverlay() {
+        const existingOverlay = document.querySelector('[data-highscore-overlay="true"]');
+        if (existingOverlay) {
+            existingOverlay.remove();
+        }
+
         const overlay = document.createElement('div');
         overlay.setAttribute('data-highscore-overlay', 'true');
         overlay.style.position = 'fixed';
@@ -139,19 +145,37 @@
         title.style.marginBottom = '0.5rem';
 
         const text = document.createElement('p');
-        text.textContent = 'Gib deinen Namen ein, damit Highscores pro Kategorie gespeichert werden können.';
+        text.textContent = 'Gib zuerst deinen Benutzernamen ein.';
         text.style.marginBottom = '1rem';
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.maxLength = 30;
-        input.placeholder = 'Dein Name';
-        input.className = 'username-input';
-        input.style.padding = '0.8rem';
+        const usernameInput = document.createElement('input');
+        usernameInput.type = 'text';
+        usernameInput.maxLength = 30;
+        usernameInput.placeholder = 'Dein Name';
+        usernameInput.className = 'username-input';
+        usernameInput.style.padding = '0.8rem';
+
+        const pinInput = document.createElement('input');
+        pinInput.type = 'password';
+        pinInput.inputMode = 'numeric';
+        pinInput.pattern = '\\d{4}';
+        pinInput.maxLength = 4;
+        pinInput.placeholder = '4-stellige PIN';
+        pinInput.className = 'username-input';
+        pinInput.style.padding = '0.8rem';
+        pinInput.hidden = true;
+
+        const pinHint = document.createElement('p');
+        pinHint.style.marginTop = '0.75rem';
+        pinHint.style.marginBottom = '0';
+        pinHint.style.fontSize = '0.95rem';
+        pinHint.style.color = '#475569';
+        pinHint.hidden = true;
 
         const inputFrame = document.createElement('div');
         inputFrame.className = 'username-input-frame';
-        inputFrame.appendChild(input);
+        inputFrame.appendChild(usernameInput);
+        inputFrame.appendChild(pinInput);
 
         const error = document.createElement('p');
         error.style.color = '#dc2626';
@@ -166,48 +190,167 @@
         button.style.borderRadius = '12px';
         button.style.cursor = 'pointer';
 
+        const backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.textContent = 'Zurück';
+        backButton.className = 'username-continue-button';
+        backButton.style.padding = '0.8rem 1rem';
+        backButton.style.borderRadius = '12px';
+        backButton.style.cursor = 'pointer';
+        backButton.style.marginRight = '0.75rem';
+        backButton.hidden = true;
+
+        const buttonRow = document.createElement('div');
+        buttonRow.style.display = 'flex';
+        buttonRow.style.justifyContent = 'flex-end';
+        buttonRow.appendChild(backButton);
+        buttonRow.appendChild(button);
+
         panel.appendChild(title);
         panel.appendChild(text);
         panel.appendChild(inputFrame);
+        panel.appendChild(pinHint);
         panel.appendChild(error);
-        panel.appendChild(button);
+        panel.appendChild(buttonRow);
         overlay.appendChild(panel);
         document.body.appendChild(overlay);
 
-        function confirm() {
-            const username = (input.value || '').trim();
+        let currentStep = 'username';
+        let pendingUsername = '';
+        let pendingMode = 'login';
+
+        function showUsernameStep() {
+            currentStep = 'username';
+            pendingUsername = '';
+            pendingMode = 'login';
+            title.textContent = 'Benutzername';
+            text.textContent = 'Gib zuerst deinen Benutzernamen ein.';
+            pinHint.hidden = true;
+            pinInput.hidden = true;
+            usernameInput.hidden = false;
+            backButton.hidden = true;
+            button.textContent = 'Weiter';
+            error.textContent = '';
+            window.setTimeout(function () {
+                usernameInput.focus();
+            }, 0);
+        }
+
+        function showPinStep(username, mode) {
+            currentStep = 'pin';
+            pendingUsername = username;
+            pendingMode = mode;
+            title.textContent = mode === 'register' ? 'PIN festlegen' : 'PIN eingeben';
+            text.textContent = mode === 'register'
+                ? 'Dieser Benutzername ist noch frei. Lege jetzt eine 4-stellige PIN fest.'
+                : 'Benutzername gefunden. Bitte gib deine 4-stellige PIN ein.';
+            pinHint.textContent = mode === 'register'
+                ? 'Die PIN wird nicht im Klartext gespeichert, sondern gehasht in der Datenbank abgelegt.'
+                : '';
+            pinHint.hidden = mode !== 'register';
+            usernameInput.hidden = true;
+            pinInput.hidden = false;
+            pinInput.value = '';
+            backButton.hidden = false;
+            button.textContent = mode === 'register' ? 'PIN speichern' : 'Anmelden';
+            error.textContent = '';
+            window.setTimeout(function () {
+                pinInput.focus();
+            }, 0);
+        }
+
+        async function confirmUsername() {
+            const username = (usernameInput.value || '').trim();
 
             if (username.length < 2) {
                 error.textContent = 'Bitte mindestens 2 Zeichen eingeben.';
-                input.focus();
+                usernameInput.focus();
                 return;
             }
 
-            currentUsername = username;
-            saveCookie(usernameCookieName, username, 180);
-            overlay.remove();
+            button.disabled = true;
+            error.textContent = '';
+
+            try {
+                const result = await window.HighscoreApi.getUserStatus(username);
+                showPinStep(result.username || username, result.exists ? 'login' : 'register');
+            } catch (requestError) {
+                error.textContent = requestError && requestError.message
+                    ? requestError.message
+                    : 'Benutzerstatus konnte nicht geprüft werden.';
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        async function confirmPin() {
+            const pin = (pinInput.value || '').trim();
+
+            if (!/^\d{4}$/.test(pin)) {
+                error.textContent = 'Bitte genau 4 Ziffern eingeben.';
+                pinInput.focus();
+                return;
+            }
+
+            button.disabled = true;
+            backButton.disabled = true;
+            error.textContent = '';
+
+            try {
+                const result = pendingMode === 'register'
+                    ? await window.HighscoreApi.registerUser({ username: pendingUsername, pin: pin })
+                    : await window.HighscoreApi.loginUser({ username: pendingUsername, pin: pin });
+
+                currentUsername = result.username || pendingUsername;
+                isAuthenticated = true;
+                saveCookie(usernameCookieName, currentUsername, 180);
+                overlay.remove();
+            } catch (requestError) {
+                error.textContent = requestError && requestError.message
+                    ? requestError.message
+                    : 'Anmeldung fehlgeschlagen.';
+            } finally {
+                button.disabled = false;
+                backButton.disabled = false;
+            }
+        }
+
+        function confirm() {
+            if (currentStep === 'username') {
+                confirmUsername();
+                return;
+            }
+
+            confirmPin();
         }
 
         button.addEventListener('click', confirm);
-        input.addEventListener('keydown', function (event) {
+        backButton.addEventListener('click', showUsernameStep);
+        usernameInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                confirm();
+            }
+        });
+        pinInput.addEventListener('input', function () {
+            pinInput.value = pinInput.value.replace(/\D/g, '').slice(0, 4);
+        });
+        pinInput.addEventListener('keydown', function (event) {
             if (event.key === 'Enter') {
                 confirm();
             }
         });
 
-        window.setTimeout(function () {
-            input.focus();
-        }, 0);
+        const savedUsername = readCookie(usernameCookieName).trim();
+        if (savedUsername) {
+            usernameInput.value = savedUsername;
+        }
+
+        showUsernameStep();
     }
 
     function initUsername() {
-        const savedUsername = readCookie(usernameCookieName).trim();
-
-        if (savedUsername.length >= 2) {
-            currentUsername = savedUsername;
-            return;
-        }
-
+        currentUsername = '';
+        isAuthenticated = false;
         createOverlay();
     }
 
@@ -259,8 +402,12 @@
         pageShell.appendChild(connectionNotice);
 
         logoutButton.addEventListener('click', function () {
+            window.HighscoreApi.logoutUser().catch(function () {
+                return null;
+            });
             deleteCookie(usernameCookieName);
             currentUsername = '';
+            isAuthenticated = false;
             pendingAnswerCategory = '';
             submittedCategories.clear();
             resetRoundTracking();
@@ -391,7 +538,7 @@
             return;
         }
 
-        if (!currentUsername || !category || submittedCategories.has(category)) {
+        if (!isAuthenticated || !currentUsername || !category || submittedCategories.has(category)) {
             return;
         }
 
@@ -418,6 +565,11 @@
             refreshDashboard();
         } catch (error) {
             submittedCategories.delete(category);
+
+            if (error && /401/.test(String(error.message || ''))) {
+                isAuthenticated = false;
+                initUsername();
+            }
         }
     }
 
