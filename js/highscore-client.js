@@ -145,9 +145,9 @@
         input.type = 'text';
         input.maxLength = 30;
         input.placeholder = 'Dein Name';
+        input.className = 'username-input';
         input.style.width = '100%';
         input.style.padding = '0.8rem';
-        input.style.border = '1px solid #d1d5db';
         input.style.borderRadius = '12px';
         input.style.marginBottom = '0.75rem';
 
@@ -159,10 +159,8 @@
         const button = document.createElement('button');
         button.type = 'button';
         button.textContent = 'Weiter';
+        button.className = 'username-continue-button';
         button.style.padding = '0.8rem 1rem';
-        button.style.border = '1px solid #2563eb';
-        button.style.background = '#2563eb';
-        button.style.color = '#ffffff';
         button.style.borderRadius = '12px';
         button.style.cursor = 'pointer';
 

@@ -489,6 +489,48 @@ select {
   line-height: 1;
 }
 
+@property --de-ring-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes de-ring-spin {
+  to {
+    --de-ring-angle: 360deg;
+  }
+}
+
+.username-input {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    conic-gradient(from var(--de-ring-angle), #111111 0deg 120deg, #c1121f 120deg 240deg, #ffce00 240deg 360deg) border-box;
+  animation: de-ring-spin 2.6s linear infinite;
+}
+
+.username-input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 206, 0, 0.2);
+}
+
+.username-continue-button {
+  border-color: rgba(212, 160, 23, 0.45);
+  background: linear-gradient(135deg, rgba(17, 17, 17, 0.04), rgba(212, 160, 23, 0.2));
+  color: #8a5a00;
+  font-weight: 700;
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.username-continue-button:hover,
+.username-continue-button:focus-visible {
+  background: #fff7ed;
+  border-color: rgba(177, 0, 32, 0.26);
+  color: #111111;
+  outline: none;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 720px) {
   body {
     padding: 0 0.9rem 2rem;
